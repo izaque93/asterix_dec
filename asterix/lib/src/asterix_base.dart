@@ -12,16 +12,33 @@ class AsterixDecoder {
   }
 }
 
-class Asterix48 {
-  final int category = 48;
+enum DetectionType {
+  noDetection,
+  singlePSRdetection,
+  singleSSRDetection,
+  ssrPSRDetection,
+  singleModeSAllCall,
+  singleModeSRollCall,
+  modeSAllCallPSR,
+  modeSRollCallPSR,
+}
+
+class Asterix {
+  late int category;
   late int length;
-  final List<int> data;
+
+  Asterix(List<int> data);
+}
+
+class Asterix48 extends Asterix {
   int? sac;
   int? sic;
 
   double? timeOfDay;
+  DetectionType? detectionType;
 
-  Asterix48(this.data) {
+  Asterix48(List<int> data) : super(data) {
+    category = 48;
     int i = 0;
     length = data[0] * 256 + data[1];
     int fspec = data[2];
@@ -48,7 +65,13 @@ class Asterix48 {
       // seconds
       timeOfDay = timeOfDay! / 128;
     }
+    if (istargetReportDescriptorPresent) {
+      // MSB 3 bits
+      var typ = data[++i] & 0xE0;
+      typ = typ >> 5;
+      detectionType = DetectionType.values[typ];
+    }
 
-    print(sac);
+    print(detectionType);
   }
 }
