@@ -23,6 +23,12 @@ enum DetectionType {
   modeSRollCallPSR,
 }
 
+enum SimulatedOrActual { actual, simulated }
+
+enum ReplyOrigin { aircraftTransponder, fieldMonitor }
+
+enum RealOrTest { realTargetReport, testTargetReport }
+
 class Asterix {
   late int category;
   late int length;
@@ -33,9 +39,13 @@ class Asterix {
 class Asterix48 extends Asterix {
   int? sac;
   int? sic;
-
   double? timeOfDay;
   DetectionType? detectionType;
+  SimulatedOrActual? simulatedOrActual;
+  int? rdpChain;
+  bool? spi;
+  ReplyOrigin? replyOrigin;
+  RealOrTest? realOrTest;
 
   Asterix48(List<int> data) : super(data) {
     category = 48;
@@ -66,12 +76,34 @@ class Asterix48 extends Asterix {
       timeOfDay = timeOfDay! / 128;
     }
     if (istargetReportDescriptorPresent) {
-      // MSB 3 bits
-      var typ = data[++i] & 0xE0;
+      //Read next field
+      int targetReportDescriptor = data[++i];
+
+      // MSB 3 bits TYP
+      int typ = targetReportDescriptor & 0xE0;
       typ = typ >> 5;
       detectionType = DetectionType.values[typ];
-    }
 
-    print(detectionType);
+      // bit 5 SIM
+      int sim = targetReportDescriptor & 0x10 == 0x10 ? 1 : 0;
+      simulatedOrActual = SimulatedOrActual.values[sim];
+
+      // bit 4 RDP Chain
+      rdpChain = targetReportDescriptor & 0x08 == 0x08 ? 2 : 1;
+
+      // bit 3 SPI
+      spi = targetReportDescriptor & 0x04 == 0x04;
+
+      // bit 2 RAB
+      replyOrigin = ReplyOrigin.values[(targetReportDescriptor & 0x02) >> 1];
+
+      // bit 1 First Extend
+      if (targetReportDescriptor & 0x01 == 0x01) {
+        targetReportDescriptor = data[++i];
+
+        // bit 8 TST
+        realOrTest = RealOrTest.values[targetReportDescriptor & 0x80 >> 7];
+      }
+    }
   }
 }
