@@ -40,6 +40,9 @@ class Asterix48 extends Asterix {
   bool? surveillanceClusterNetworkInformationAvailable;
   bool? passiveAcquisitionInterfaceInformationAvailable;
   bool? paiElementPopulated;
+  
+  double? rho;
+  double? theta;
 
   Asterix48(List<int> data) : super(data) {
     category = 48;
@@ -142,6 +145,13 @@ class Asterix48 extends Asterix {
           }
         }
       }
+    }
+
+    // I048/040 Measured Position in Slant Polar Coordinates
+    if (isMeasuredPositioninSlantPolarCoordinatesPresent) {
+      rho = ((data[++i] << 8) + data[++i] ) / 256; //[NM]
+      theta = ((data[++i] << 8)  + data[++i] ) * 0.0055; //[deg]
+      
     }
   }
 }
