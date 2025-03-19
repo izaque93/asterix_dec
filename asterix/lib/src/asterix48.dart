@@ -34,6 +34,12 @@ class Asterix48 extends Asterix {
   bool? militaryEmergency;
   bool? militaryIdentification;
   FOEFRI? foefri;
+  bool? adsbElementPopulated;
+  bool? onSiteADSBInformationAvaliable;
+  bool? scnElementPopulated;
+  bool? surveillanceClusterNetworkInformationAvailable;
+  bool? passiveAcquisitionInterfaceInformationAvailable;
+  bool? paiElementPopulated;
 
   Asterix48(List<int> data) : super(data) {
     category = 48;
@@ -86,38 +92,54 @@ class Asterix48 extends Asterix {
       // bit 2 RAB
       replyOrigin = ReplyOrigin.values[(targetReportDescriptor & 0x02) >> 1];
 
-      // bit 1 First Extend
+      // bit 1 First Extend //TODO: test
       if (targetReportDescriptor & 0x01 == 0x01) {
         targetReportDescriptor = data[++i];
 
         // bit 8 TST
-        //TODO: test
         realOrTest = RealOrTest.values[targetReportDescriptor & 0x80 >> 7];
 
         // bit 7 ERR Extended Range present or not
-        //TODO: test
         extendedRange = targetReportDescriptor & 0x40 == 0x40;
 
         // bit 6 XPP X-Pulse present or not
-        //TODO: test
         xPulsePresent = targetReportDescriptor & 0x20 == 0x20;
 
         // bit 5 ME Military Emergency
-        //TODO: test
         militaryEmergency = targetReportDescriptor & 0x10 == 0x10;
 
         // bit 4 MI Military identification
-        //TODO: test
         militaryIdentification = targetReportDescriptor & 0x08 == 0x08;
 
         // bit 3/2 FOE/FRI
-        //TODO: test
         foefri = FOEFRI.values[targetReportDescriptor & 0x06 >> 1];
 
         // bit 1 Second Extend
+        //TODO: test
         if (targetReportDescriptor & 0x01 == 0x01) {
           targetReportDescriptor = data[++i];
-          
+
+          // bit 8 ADSB#EP ADSB Element Populated Bit
+          adsbElementPopulated = targetReportDescriptor & 0x80 == 0x80;
+
+          // bit 7 On-Site ADS-B Information Avaliable
+          onSiteADSBInformationAvaliable =
+              targetReportDescriptor & 0x40 == 0x40;
+
+          //bits-6/5 (SCN) Surveillance Cluster Network Information
+          scnElementPopulated = targetReportDescriptor & 0x20 == 0x20;
+          surveillanceClusterNetworkInformationAvailable =
+              targetReportDescriptor & 0x10 == 0x10;
+
+          //bits-4/3 (PAI) Passive Acquisition Interface Informatio
+          paiElementPopulated = targetReportDescriptor & 0x08 == 0x08;
+          passiveAcquisitionInterfaceInformationAvailable =
+              targetReportDescriptor & 0x04 == 0x04;
+
+          // load nexts extended fields not suported yet
+          while (targetReportDescriptor & 0x01 == 0x01) {
+            targetReportDescriptor = data[++i];
+          }
         }
       }
     }
