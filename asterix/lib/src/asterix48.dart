@@ -48,6 +48,9 @@ class Asterix48 extends Asterix {
   String? mode3ACode;
   double? rho;
   double? theta;
+  bool? flightLevelValidated;
+  bool? flightLevelGarbled;
+  double? flightLevel;
 
   Asterix48(List<int> data) : super(data) {
     category = 48;
@@ -162,16 +165,23 @@ class Asterix48 extends Asterix {
     if (isMode3ACodeinOctalRepresentationPresent) {
       final firstByte = data[++i];
       final secondByte = data[++i];
-      mode3ACodeValidated = firstByte & 0x80 == 0x80;
+      mode3ACodeValidated = !(firstByte & 0x80 == 0x80);
       mode3ACodeGarbled = firstByte & 0x40 == 0x40;
-      mode3ACodeOrigin = Mode3ACodeOrigin.values[firstByte & 0x20 >> 5];
+      mode3ACodeOrigin = Mode3ACodeOrigin.values[(firstByte & 0x20) >> 5];
 
       mode3ACode = "${(firstByte & 0x0E) >> 1}";
       mode3ACode =
           "${mode3ACode!}${((firstByte & 0x01) << 2) + ((secondByte & 0xC0) >> 6)}";
       mode3ACode =
           "${mode3ACode!}${(secondByte & 0x38) >> 3}${secondByte & 0x07}";
-      print("Mode3ACode: $mode3ACode");
+    }
+    // I048/090 Flight Level in Binary Representation
+    if (isFlightLevelinBinaryRepresentationPresent) {
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      flightLevelValidated = !(firstByte & 0x80 == 0x80);
+      flightLevelGarbled = firstByte & 0x40 == 0x40;
+      flightLevel = (((firstByte & 0x3F) << 8) + secondByte) * 0.25;
     }
   }
 }
