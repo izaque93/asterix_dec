@@ -17,5 +17,9 @@ class Asterix {
   late int category;
   late int length;
 
+  bool bitfield(int byte, int field){
+    return (byte >> (field -1)) & 0x01 == 1;
+  }
+
   Asterix(List<int> data);
 }

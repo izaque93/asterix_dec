@@ -1,7 +1,7 @@
 name: asterix
-description: A starting point for Dart libraries or applications.
+description: A Asterix decode library.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/izaque93/asterix_dec
 
 environment:
   sdk: ^3.8.0-171.0.dev

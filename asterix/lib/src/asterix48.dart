@@ -58,22 +58,106 @@ class Asterix48 extends Asterix {
   int? amplitudeOfprimaryPlot;
   double? differenceInRangeBetweenPsrAndSsrplot;
   double? differenceInAzimuthBetweenPsrAndSsrplot;
+  int? aircraftMSAddress;
 
   Asterix48(List<int> data) : super(data) {
+    // first extended variables
+    bool isAircraftAddressPresent = false;
+    bool isAircraftIdentificationPresent = false;
+    bool isModeSMBDataPresent = false;
+    bool isTrackNumberPresent = false;
+    bool isCalculatedPositionInCartesianCoordinatesPresent = false;
+    bool isCalculatedTrackVelocityInPolarRepresentationPresent = false;
+    bool isTrackStatusPresent = false;
+
+    // second extended variables
+    bool isTrackQualityPresent = false;
+    bool isWarningErrorConditionsTargetClassificationPresent = false;
+    bool isMode3ACodeConfidenceIndicatorPresent = false;
+    bool isModeCCodeandConfidenceIndicatorPresent = false;
+    bool isHeightMeasuredBy3dRadarPresent = false;
+    bool isRadialDopplerSpeedPresent = false;
+    bool isCommunicationsACASCapabilityAndFlightStatusPresent = false;
+
+    // third extended variables
+    bool isACASResolutionAdvisoryReportPresent = false;
+    bool isMode1InOctalRepresentationPresent = false;
+    bool isMode2InOctalRepresentationPresent = false;
+    bool isMode1InConfidenceIndicatorPresent = false;
+    bool isMode2InConfidenceIndicatorPresent = false;
+    bool isSpecialPurposeFieldPresent = false;
+    bool isReservedExpansionFieldPresent = false;
+
     category = 48;
-    int i = 0;
+    int i = 1;
     length = data[0] * 256 + data[1];
-    int fspec = data[2];
-    i = 2;
-    final isDataSourcePresent = (fspec & 0x80) == 0x80;
-    final isTimeOfDayPresent = (fspec & 0x40) == 0x40;
-    final istargetReportDescriptorPresent = (fspec & 0x20) == 0x20;
-    final isMeasuredPositioninSlantPolarCoordinatesPresent =
-        (fspec & 0x10) == 0x10;
-    final isMode3ACodeinOctalRepresentationPresent = (fspec & 0x08) == 0x08;
-    final isFlightLevelinBinaryRepresentationPresent = (fspec & 0x04) == 0x04;
-    final isRadarPlotCharacteristicsPresent = (fspec & 0x02) == 0x02;
-    // one byte for FSPEC
+    // FSPEC field
+    int fspec = data[++i];
+
+    final isDataSourcePresent = super.bitfield(fspec, 8);
+    final isTimeOfDayPresent = super.bitfield(fspec, 7);
+    final istargetReportDescriptorPresent = super.bitfield(fspec, 6);
+    final isMeasuredPositioninSlantPolarCoordinatesPresent = super.bitfield(
+      fspec,
+      5,
+    );
+    final isMode3ACodeinOctalRepresentationPresent = super.bitfield(fspec, 4);
+    final isFlightLevelinBinaryRepresentationPresent = super.bitfield(fspec, 3);
+    final isRadarPlotCharacteristicsPresent = super.bitfield(fspec, 2);
+
+    // Read next FSPEC field (1)
+    if (fspec & 0x01 == 0x01) {
+      fspec = data[++i];
+      isAircraftAddressPresent = super.bitfield(fspec, 8);
+      isAircraftIdentificationPresent = super.bitfield(fspec, 7);
+      isModeSMBDataPresent = super.bitfield(fspec, 6);
+      isTrackNumberPresent = super.bitfield(fspec, 5);
+      ;
+      isCalculatedPositionInCartesianCoordinatesPresent = super.bitfield(
+        fspec,
+        4,
+      );
+      isCalculatedTrackVelocityInPolarRepresentationPresent = super.bitfield(
+        fspec,
+        3,
+      );
+      isTrackStatusPresent = super.bitfield(fspec, 2);
+    }
+
+    // Read next FSPEC field (2)
+    if (fspec & 0x01 == 0x01) {
+      fspec = data[++i];
+      isTrackQualityPresent = super.bitfield(fspec, 8);
+      ;
+      isWarningErrorConditionsTargetClassificationPresent = super.bitfield(
+        fspec,
+        7,
+      );
+      isMode3ACodeConfidenceIndicatorPresent = super.bitfield(fspec, 6);
+      isModeCCodeandConfidenceIndicatorPresent = super.bitfield(fspec, 5);
+      ;
+      isHeightMeasuredBy3dRadarPresent = super.bitfield(fspec, 4);
+      isRadialDopplerSpeedPresent = super.bitfield(fspec, 3);
+      isCommunicationsACASCapabilityAndFlightStatusPresent = super.bitfield(
+        fspec,
+        2,
+      );
+    }
+
+    // Read next FSPEC field (3)
+    if (fspec & 0x01 == 0x01) {
+      fspec = data[++i];
+      isACASResolutionAdvisoryReportPresent = super.bitfield(fspec, 8);
+      ;
+      isMode1InOctalRepresentationPresent = super.bitfield(fspec, 7);
+      isMode2InOctalRepresentationPresent = super.bitfield(fspec, 6);
+      isMode1InConfidenceIndicatorPresent = super.bitfield(fspec, 5);
+      ;
+      isMode2InConfidenceIndicatorPresent = super.bitfield(fspec, 4);
+      isSpecialPurposeFieldPresent = super.bitfield(fspec, 3);
+      isReservedExpansionFieldPresent = super.bitfield(fspec, 2);
+    }
+
     while (0x01 & fspec == 0x01) {
       fspec = data[++i];
     }
@@ -195,32 +279,40 @@ class Asterix48 extends Asterix {
     if (isRadarPlotCharacteristicsPresent) {
       final firstByte = data[++i];
       if (firstByte & 0x80 == 0x80) {
-        ssrPlotRunlength =  data[++i] * 0.044;
+        ssrPlotRunlength = data[++i] * 0.044;
       }
-      if(firstByte & 0x40 == 0x40){
+      if (firstByte & 0x40 == 0x40) {
         numberOfReceivedMssrReplies = data[++i];
       }
-      if(firstByte & 0x20 == 0x20){
+      if (firstByte & 0x20 == 0x20) {
         amplitudeOfMssrReply = data[++i].toSigned(8);
-        print(amplitudeOfMssrReply);
-      }//TODO: test
-      if(firstByte & 0x10 == 0x10){
+      } //TODO: test
+      if (firstByte & 0x10 == 0x10) {
         primaryPlotRunlength = data[++i] * 0.044;
-      }//TODO: test
-      if(firstByte & 0x08 == 0x08){
+      } //TODO: test
+      if (firstByte & 0x08 == 0x08) {
         amplitudeOfprimaryPlot = data[++i].toSigned(8);
       }
       //TODO: test
-      if(firstByte & 0x04 == 0x04){
+      if (firstByte & 0x04 == 0x04) {
         differenceInRangeBetweenPsrAndSsrplot = data[++i].toSigned(8) / 256;
       }
       //TODO: test
-      if(firstByte & 0x02 == 0x02){
-        differenceInAzimuthBetweenPsrAndSsrplot = data[++i].toSigned(8) * 0.02197265625;
+      if (firstByte & 0x02 == 0x02) {
+        differenceInAzimuthBetweenPsrAndSsrplot =
+            data[++i].toSigned(8) * 0.02197265625;
       }
-
-
-      
     }
+
+    // I048/220 Aircraft Address
+    // TODO: test
+    if (isAircraftAddressPresent) {
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      final thirdByte = data[++i];
+      aircraftMSAddress = (firstByte << 16) + (secondByte << 8) + thirdByte;
+    }
+    
+
   }
 }
