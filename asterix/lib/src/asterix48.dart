@@ -21,6 +21,14 @@ enum FOEFRI { noMode4Interrogation, friendlyTarget, unknownTarget, noReply }
 
 enum Mode3ACodeOrigin { transponder, notExtractedDuringLastScan }
 
+enum ConfirmedOrTentativeTrack { confirmed, tentative }
+
+enum TrackMaintainingSensors { combined, psr, mssr, invalid }
+
+enum ConfideceInAssociationProcess { normal, low }
+
+enum ClimbingDescendingMode { maintaining, climbing, descending, unknown }
+
 class Asterix48 extends Asterix {
   int? sac;
   int? sic;
@@ -68,6 +76,11 @@ class Asterix48 extends Asterix {
   double? yCoordinate;
   double? trackGroundSpeed;
   double? trackHeading;
+  ConfirmedOrTentativeTrack? confirmedOrTentativeTrack;
+  TrackMaintainingSensors? trackMaintainingSensors;
+  ConfideceInAssociationProcess? confideceInAssociationProcess;
+  bool? manoeuvreDetectionInHorizontalSense;
+  ClimbingDescendingMode? climbingDescendingMode;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -372,18 +385,37 @@ class Asterix48 extends Asterix {
       final thirdByte = data[++i];
       final fourthByte = data[++i];
       xCoordinate = ((firstByte << 8) + secondByte).toSigned(16) / 128;
-      yCoordinate = ((thirdByte << 8 )+ fourthByte).toSigned(16) / 128;
+      yCoordinate = ((thirdByte << 8) + fourthByte).toSigned(16) / 128;
     }
 
     // I048/200 Calculated Track Velocity in Polar Representation
-    if(isCalculatedTrackVelocityInPolarRepresentationPresent){
+    if (isCalculatedTrackVelocityInPolarRepresentationPresent) {
       final firstByte = data[++i];
       final secondByte = data[++i];
       final thirdByte = data[++i];
       final fourthByte = data[++i];
-      trackGroundSpeed = ((firstByte << 8) + secondByte)  / 16384  ; //[NM/s]
-      trackHeading = ((thirdByte << 8) + fourthByte) * 0.0055; //[deg] geographic ref
+      trackGroundSpeed = ((firstByte << 8) + secondByte) / 16384; //[NM/s]
+      trackHeading =
+          ((thirdByte << 8) + fourthByte) * 0.0055; //[deg] geographic ref
     }
 
+    // I048/170 Track Status
+    if (isTrackStatusPresent) {
+      final info = data[++i];
+      confirmedOrTentativeTrack =
+          bitfield(info, 8)
+              ? ConfirmedOrTentativeTrack.tentative
+              : ConfirmedOrTentativeTrack.confirmed;
+      trackMaintainingSensors =
+          TrackMaintainingSensors.values[(info & 0x60) >> 5];
+      confideceInAssociationProcess =
+          ConfideceInAssociationProcess.values[bitfield(info, 5) ? 1 : 0];
+      manoeuvreDetectionInHorizontalSense = bitfield(info, 4);
+      climbingDescendingMode = ClimbingDescendingMode.values[(info & 0x6) >> 1];
+      // extension field
+      if (bitfield(info, 1)) {
+        final info = data[++i];
+      }
+    }
   }
 }
