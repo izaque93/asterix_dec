@@ -139,7 +139,8 @@ class Asterix48 extends Asterix {
   bool? modeCCodeValidated;
   bool? modeCCodeGarbled;
   int? modeCReplyInGrayNotation;
-  int? modoCQualityIndicators;
+  int? modoCLowQualityIndicators;
+  int? heightMeasuredBy3dRadar;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -150,6 +151,7 @@ class Asterix48 extends Asterix {
     bool isCalculatedPositionInCartesianCoordinatesPresent = false;
     bool isCalculatedTrackVelocityInPolarRepresentationPresent = false;
     bool isTrackStatusPresent = false;
+
 
     // second extended variables
     bool isTrackQualityPresent = false;
@@ -525,11 +527,16 @@ class Asterix48 extends Asterix {
     //TODO: test
     if (isModeCCodeandConfidenceIndicatorPresent) {
       int info = data[++i];
-      modeCCodeValidated = bitfield(info, 8);
+      modeCCodeValidated = !bitfield(info, 8);
       modeCCodeGarbled = bitfield(info, 7);
       modeCReplyInGrayNotation = ((info & 0x0F) << 8) + data[++i];
       info = data[++i];
-      modoCQualityIndicators = (info << 8) + data[++i];
+      modoCLowQualityIndicators = (info << 8) + data[++i]; // high bits has low quality
+    }
+    // Data Item I048/110, Height Measured by a 3D Radar
+    if(isHeightMeasuredBy3dRadarPresent){
+      int info = data[++i];
+      heightMeasuredBy3dRadar = ((info << 8) + data[++i]).toSigned(16);
     }
   }
 }
