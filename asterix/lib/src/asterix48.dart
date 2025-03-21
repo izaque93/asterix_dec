@@ -29,6 +29,8 @@ enum ConfideceInAssociationProcess { normal, low }
 
 enum ClimbingDescendingMode { maintaining, climbing, descending, unknown }
 
+enum TypeOfPlotCoordTransformationMechanism { radarPlane, slantRange }
+
 class Asterix48 extends Asterix {
   int? sac;
   int? sic;
@@ -81,6 +83,13 @@ class Asterix48 extends Asterix {
   ConfideceInAssociationProcess? confideceInAssociationProcess;
   bool? manoeuvreDetectionInHorizontalSense;
   ClimbingDescendingMode? climbingDescendingMode;
+  bool? endOfTrack;
+  bool? ghostTarget;
+  // Track maintained with track information from
+  //neighbouring Node B on the cluster, or network
+  bool? trackMaintainingWithExternalSources;
+  TypeOfPlotCoordTransformationMechanism?
+  typeOfPlotCoordTransformationMechanism;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -415,6 +424,14 @@ class Asterix48 extends Asterix {
       // extension field
       if (bitfield(info, 1)) {
         final info = data[++i];
+        endOfTrack = bitfield(info, 8);
+        ghostTarget = bitfield(info, 7);
+        trackMaintainingWithExternalSources = bitfield(info, 6);
+        typeOfPlotCoordTransformationMechanism =
+            TypeOfPlotCoordTransformationMechanism.values[(info & 0x10) >> 4];
+        while (bitfield(info, 1)) {
+          final _ = data[++i];
+        }
       }
     }
   }
