@@ -90,6 +90,10 @@ class Asterix48 extends Asterix {
   bool? trackMaintainingWithExternalSources;
   TypeOfPlotCoordTransformationMechanism?
   typeOfPlotCoordTransformationMechanism;
+  double? horizontalStandardDeviation;
+  double? verticalStandardDeviation;
+  double? groundspeedStandardDeviation;
+  double? headingStandardDeviation;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -433,6 +437,15 @@ class Asterix48 extends Asterix {
           final _ = data[++i];
         }
       }
+    }
+    //Data Item I048/210, Track Quality
+    //TODO: test
+    if (isTrackQualityPresent) {
+
+      horizontalStandardDeviation = data[++i] / 128; // [NM]
+      verticalStandardDeviation = data[++i] / 128; // [NM]
+      groundspeedStandardDeviation = data[++i] / 16384; // [NM/s]
+      headingStandardDeviation = data[++i] * 0.08789; // [°]
     }
   }
 }
