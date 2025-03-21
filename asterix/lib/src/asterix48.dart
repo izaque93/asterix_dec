@@ -64,6 +64,10 @@ class Asterix48 extends Asterix {
   int? bds1;
   int? bds2;
   int? trackNumber;
+  double? xCoordinate;
+  double? yCoordinate;
+  double? trackGroundSpeed;
+  double? trackHeading;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -355,12 +359,31 @@ class Asterix48 extends Asterix {
       }
     }
     // I048/161 Track Number
-    // TODO: test
     if (isTrackNumberPresent) {
       final firstByte = data[++i];
       final secondByte = data[++i];
       trackNumber = (firstByte << 8) + secondByte;
     }
-    
+
+    // I048/042 Calculated Position in Cartesian Coordinates
+    if (isCalculatedPositionInCartesianCoordinatesPresent) {
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      final thirdByte = data[++i];
+      final fourthByte = data[++i];
+      xCoordinate = ((firstByte << 8) + secondByte).toSigned(16) / 128;
+      yCoordinate = ((thirdByte << 8 )+ fourthByte).toSigned(16) / 128;
+    }
+
+    // I048/200 Calculated Track Velocity in Polar Representation
+    if(isCalculatedTrackVelocityInPolarRepresentationPresent){
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      final thirdByte = data[++i];
+      final fourthByte = data[++i];
+      trackGroundSpeed = ((firstByte << 8) + secondByte)  / 16384  ; //[NM/s]
+      trackHeading = ((thirdByte << 8) + fourthByte) * 0.0055; //[deg] geographic ref
+    }
+
   }
 }
