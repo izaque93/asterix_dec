@@ -19,6 +19,8 @@ enum RealOrTest { realTargetReport, testTargetReport }
 
 enum FOEFRI { noMode4Interrogation, friendlyTarget, unknownTarget, noReply }
 
+enum Mode3ACodeOrigin { transponder, notExtractedDuringLastScan }
+
 class Asterix48 extends Asterix {
   int? sac;
   int? sic;
@@ -40,7 +42,10 @@ class Asterix48 extends Asterix {
   bool? surveillanceClusterNetworkInformationAvailable;
   bool? passiveAcquisitionInterfaceInformationAvailable;
   bool? paiElementPopulated;
-  
+  bool? mode3ACodeValidated;
+  bool? mode3ACodeGarbled;
+  Mode3ACodeOrigin? mode3ACodeOrigin;
+  String? mode3ACode;
   double? rho;
   double? theta;
 
@@ -149,9 +154,24 @@ class Asterix48 extends Asterix {
 
     // I048/040 Measured Position in Slant Polar Coordinates
     if (isMeasuredPositioninSlantPolarCoordinatesPresent) {
-      rho = ((data[++i] << 8) + data[++i] ) / 256; //[NM]
-      theta = ((data[++i] << 8)  + data[++i] ) * 0.0055; //[deg]
-      
+      rho = ((data[++i] << 8) + data[++i]) / 256; //[NM]
+      theta = ((data[++i] << 8) + data[++i]) * 0.0055; //[deg]
+    }
+
+    // I048/070 Mode-3/A Code in Octal Representation
+    if (isMode3ACodeinOctalRepresentationPresent) {
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      mode3ACodeValidated = firstByte & 0x80 == 0x80;
+      mode3ACodeGarbled = firstByte & 0x40 == 0x40;
+      mode3ACodeOrigin = Mode3ACodeOrigin.values[firstByte & 0x20 >> 5];
+
+      mode3ACode = "${(firstByte & 0x0E) >> 1}";
+      mode3ACode =
+          "${mode3ACode!}${((firstByte & 0x01) << 2) + ((secondByte & 0xC0) >> 6)}";
+      mode3ACode =
+          "${mode3ACode!}${(secondByte & 0x38) >> 3}${secondByte & 0x07}";
+      print("Mode3ACode: $mode3ACode");
     }
   }
 }
