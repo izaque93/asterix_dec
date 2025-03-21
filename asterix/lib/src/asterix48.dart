@@ -141,6 +141,8 @@ class Asterix48 extends Asterix {
   int? modeCReplyInGrayNotation;
   int? modoCLowQualityIndicators;
   int? heightMeasuredBy3dRadar;
+  bool? dopplerSpeedValid;
+  int? dopplerSpeed ,ambiguityRange, transmitterFrequency;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -151,7 +153,6 @@ class Asterix48 extends Asterix {
     bool isCalculatedPositionInCartesianCoordinatesPresent = false;
     bool isCalculatedTrackVelocityInPolarRepresentationPresent = false;
     bool isTrackStatusPresent = false;
-
 
     // second extended variables
     bool isTrackQualityPresent = false;
@@ -531,12 +532,32 @@ class Asterix48 extends Asterix {
       modeCCodeGarbled = bitfield(info, 7);
       modeCReplyInGrayNotation = ((info & 0x0F) << 8) + data[++i];
       info = data[++i];
-      modoCLowQualityIndicators = (info << 8) + data[++i]; // high bits has low quality
+      modoCLowQualityIndicators =
+          (info << 8) + data[++i]; // high bits has low quality
     }
     // Data Item I048/110, Height Measured by a 3D Radar
-    if(isHeightMeasuredBy3dRadarPresent){
+    if (isHeightMeasuredBy3dRadarPresent) {
       int info = data[++i];
-      heightMeasuredBy3dRadar = ((info << 8) + data[++i]).toSigned(16);
+      heightMeasuredBy3dRadar =
+          ((info << 8) + data[++i]).toSigned(16) * 25; //[ft]
+    }
+    //Data Item I048/120, Radial Doppler Speed
+    if (isRadialDopplerSpeedPresent) {
+      int info = data[++i];
+      bool cal = bitfield(info, 8);
+      bool rds = bitfield(info, 7);
+      if (cal) {
+        info = data[++i];
+        dopplerSpeedValid = bitfield(info, 8);
+        dopplerSpeed = (((info & 0x03) << 8) + data[++i].toSigned(10)); //[m/s]
+
+      }
+      if (rds) {
+        final rep = data[++i];
+        dopplerSpeed = (data[++i] << 8) + data[++i];
+        ambiguityRange =(data[++i] << 8) + data[++i];
+        transmitterFrequency = (data[++i] << 8) + data[++i];
+              }
     }
   }
 }
