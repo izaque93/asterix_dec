@@ -135,6 +135,12 @@ class Asterix48 extends Asterix {
   double? groundspeedStandardDeviation;
   double? headingStandardDeviation;
   WarningErrorConditions? warningErrorConditions;
+  bool? qa4, qa2, qa1, qb4, qb2, qb1, qc4, qc2, qc1, qd4, qd2, qd1;
+  bool? modeCCodeValidated;
+  bool? modeCCodeGarbled;
+  int? modeCReplyInGrayNotation;
+  int? modoCQualityIndicators;
+
   Asterix48(List<int> data) : super(data) {
     // first extended variables
     bool isAircraftAddressPresent = false;
@@ -497,7 +503,33 @@ class Asterix48 extends Asterix {
       while (bitfield(info, 1)) {
         info = data[++i];
       }
-      
+    }
+    //Data Item I048/080, Mode-3/A Code Confidence Indicator
+    if (isMode3ACodeConfidenceIndicatorPresent) {
+      int info = data[++i];
+      qa4 = bitfield(info, 4);
+      qa2 = bitfield(info, 3);
+      qa1 = bitfield(info, 2);
+      qb4 = bitfield(info, 1);
+      info = data[++i];
+      qb2 = bitfield(info, 8);
+      qb1 = bitfield(info, 7);
+      qc4 = bitfield(info, 6);
+      qc2 = bitfield(info, 5);
+      qc1 = bitfield(info, 4);
+      qd4 = bitfield(info, 3);
+      qd2 = bitfield(info, 2);
+      qd1 = bitfield(info, 1);
+    }
+    // I048/100 Mode-C Code and Confidence Indicator
+    //TODO: test
+    if (isModeCCodeandConfidenceIndicatorPresent) {
+      int info = data[++i];
+      modeCCodeValidated = bitfield(info, 8);
+      modeCCodeGarbled = bitfield(info, 7);
+      modeCReplyInGrayNotation = ((info & 0x0F) << 8) + data[++i];
+      info = data[++i];
+      modoCQualityIndicators = (info << 8) + data[++i];
     }
   }
 }
