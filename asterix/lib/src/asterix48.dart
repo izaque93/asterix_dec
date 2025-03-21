@@ -59,6 +59,7 @@ class Asterix48 extends Asterix {
   double? differenceInRangeBetweenPsrAndSsrplot;
   double? differenceInAzimuthBetweenPsrAndSsrplot;
   int? aircraftMSAddress;
+  String? aircraftIdentification;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -312,7 +313,20 @@ class Asterix48 extends Asterix {
       final thirdByte = data[++i];
       aircraftMSAddress = (firstByte << 16) + (secondByte << 8) + thirdByte;
     }
-    
+
+    // I048/240 Aircraft Identification (MS)
+    if (isAircraftIdentificationPresent) {
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      final thirdByte = data[++i];
+      aircraftIdentification = String.fromCharCode(firstByte >>2);
+      aircraftIdentification = aircraftIdentification! + String.fromCharCode(((firstByte & 0x03) << 4) + (secondByte >> 4));
+      aircraftIdentification = aircraftIdentification! + String.fromCharCode(((secondByte & 0x0F) << 2) + (thirdByte >> 6));
+      aircraftIdentification = aircraftIdentification! + String.fromCharCode(thirdByte & 0x3F);
+    }
+
+    // I048/250 Mode-S MB Data
+
 
   }
 }
