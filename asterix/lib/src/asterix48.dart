@@ -51,6 +51,13 @@ class Asterix48 extends Asterix {
   bool? flightLevelValidated;
   bool? flightLevelGarbled;
   double? flightLevel;
+  double? ssrPlotRunlength;
+  int? numberOfReceivedMssrReplies;
+  int? amplitudeOfMssrReply;
+  double? primaryPlotRunlength;
+  int? amplitudeOfprimaryPlot;
+  double? differenceInRangeBetweenPsrAndSsrplot;
+  double? differenceInAzimuthBetweenPsrAndSsrplot;
 
   Asterix48(List<int> data) : super(data) {
     category = 48;
@@ -182,6 +189,38 @@ class Asterix48 extends Asterix {
       flightLevelValidated = !(firstByte & 0x80 == 0x80);
       flightLevelGarbled = firstByte & 0x40 == 0x40;
       flightLevel = (((firstByte & 0x3F) << 8) + secondByte) * 0.25;
+    }
+
+    //I048/130 Radar Plot Characteristics
+    if (isRadarPlotCharacteristicsPresent) {
+      final firstByte = data[++i];
+      if (firstByte & 0x80 == 0x80) {
+        ssrPlotRunlength =  data[++i] * 0.044;
+      }
+      if(firstByte & 0x40 == 0x40){
+        numberOfReceivedMssrReplies = data[++i];
+      }
+      if(firstByte & 0x20 == 0x20){
+        amplitudeOfMssrReply = data[++i].toSigned(8);
+        print(amplitudeOfMssrReply);
+      }//TODO: test
+      if(firstByte & 0x10 == 0x10){
+        primaryPlotRunlength = data[++i] * 0.044;
+      }//TODO: test
+      if(firstByte & 0x08 == 0x08){
+        amplitudeOfprimaryPlot = data[++i].toSigned(8);
+      }
+      //TODO: test
+      if(firstByte & 0x04 == 0x04){
+        differenceInRangeBetweenPsrAndSsrplot = data[++i].toSigned(8) / 256;
+      }
+      //TODO: test
+      if(firstByte & 0x02 == 0x02){
+        differenceInAzimuthBetweenPsrAndSsrplot = data[++i].toSigned(8) * 0.02197265625;
+      }
+
+
+      
     }
   }
 }
