@@ -31,6 +31,46 @@ enum ClimbingDescendingMode { maintaining, climbing, descending, unknown }
 
 enum TypeOfPlotCoordTransformationMechanism { radarPlane, slantRange }
 
+enum WarningErrorConditions {
+  notDefined,
+  reflection,
+  replyDueSidelobe,
+  splitPlot,
+  secondTimeAroundReply,
+  angel,
+  terrestrialVehicle,
+  fixedPsrPlot,
+  slowPsrTarget,
+  lowQualityPsrPlot,
+  phantomPsrPlot,
+  nomMatchingPsrPlot,
+  altitudeCodeAbnormalValueComparedToTheTrack,
+  targetInClutterArea,
+  maximumDopplerResponse,
+  transponderAnomalyDetected,
+  duplicatedOrIlegalModeSAddress,
+  modeSErrorCorrectionAPllied,
+  undecodableModeSAltitude,
+  birds,
+  flockOfBirds,
+  mode1PresentInOriginalReply,
+  mode2PresentInOriginalReply,
+  plotPotenctialyCausedByWindTurbine,
+  helicopter,
+  maxNumOfReInterrogations,
+  maxNumOfReInterrogationsBDS,
+  bdsOverlayIncoherence,
+  potentialBDSSwapDetected,
+  trackUpadateInZenithalGap,
+  modeSTrackReAcquired,
+  duplicatedMode5PairNoPinDetected,
+  wrongDfReplyFormatDetected,
+  transponderAnomalyMSXPD,
+  transponderAnomalySI,
+  potentialIcConflict,
+  icConflictDetectionPossible,
+}
+
 class Asterix48 extends Asterix {
   int? sac;
   int? sic;
@@ -94,7 +134,7 @@ class Asterix48 extends Asterix {
   double? verticalStandardDeviation;
   double? groundspeedStandardDeviation;
   double? headingStandardDeviation;
-
+  WarningErrorConditions? warningErrorConditions;
   Asterix48(List<int> data) : super(data) {
     // first extended variables
     bool isAircraftAddressPresent = false;
@@ -441,11 +481,23 @@ class Asterix48 extends Asterix {
     //Data Item I048/210, Track Quality
     //TODO: test
     if (isTrackQualityPresent) {
-
       horizontalStandardDeviation = data[++i] / 128; // [NM]
       verticalStandardDeviation = data[++i] / 128; // [NM]
       groundspeedStandardDeviation = data[++i] / 16384; // [NM/s]
       headingStandardDeviation = data[++i] * 0.08789; // [°]
+    }
+
+    //Data Item I048/030, Warning/Error Conditions, and Special Purpose Field
+    if (isWarningErrorConditionsTargetClassificationPresent) {
+      //TODO: test
+      int info = data[++i];
+
+      warningErrorConditions = WarningErrorConditions.values[info >> 1];
+
+      while (bitfield(info, 1)) {
+        info = data[++i];
+      }
+      
     }
   }
 }
