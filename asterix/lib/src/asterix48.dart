@@ -60,6 +60,9 @@ class Asterix48 extends Asterix {
   double? differenceInAzimuthBetweenPsrAndSsrplot;
   int? aircraftMSAddress;
   String? aircraftIdentification;
+  int? bds;
+  int? bds1;
+  int? bds2;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -319,14 +322,37 @@ class Asterix48 extends Asterix {
       final firstByte = data[++i];
       final secondByte = data[++i];
       final thirdByte = data[++i];
-      aircraftIdentification = String.fromCharCode(firstByte >>2);
-      aircraftIdentification = aircraftIdentification! + String.fromCharCode(((firstByte & 0x03) << 4) + (secondByte >> 4));
-      aircraftIdentification = aircraftIdentification! + String.fromCharCode(((secondByte & 0x0F) << 2) + (thirdByte >> 6));
-      aircraftIdentification = aircraftIdentification! + String.fromCharCode(thirdByte & 0x3F);
+      aircraftIdentification = String.fromCharCode(firstByte >> 2);
+      aircraftIdentification =
+          aircraftIdentification! +
+          String.fromCharCode(((firstByte & 0x03) << 4) + (secondByte >> 4));
+      aircraftIdentification =
+          aircraftIdentification! +
+          String.fromCharCode(((secondByte & 0x0F) << 2) + (thirdByte >> 6));
+      aircraftIdentification =
+          aircraftIdentification! + String.fromCharCode(thirdByte & 0x3F);
     }
 
     // I048/250 Mode-S MB Data
-
-
+    // TODO: test
+    if (isModeSMBDataPresent) {
+      final firstByte = data[++i];
+      for (int j = 8; j > 0; j++) {
+        if (super.bitfield(firstByte, j)) {
+          if (j > 1) {
+            if (bds == null) {
+              bds = data[++i];
+            } else {
+              bds = (bds! << 8) + data[++i];
+            }
+          } else {
+            final finalByte = data[++i];
+            bds1 = (finalByte & 0xF0) >> 4;
+            bds2 = finalByte & 0x0F;
+          }
+        }
+      }
+    }
+    
   }
 }
