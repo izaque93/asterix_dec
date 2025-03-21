@@ -63,6 +63,7 @@ class Asterix48 extends Asterix {
   int? bds;
   int? bds1;
   int? bds2;
+  int? trackNumber;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -352,6 +353,13 @@ class Asterix48 extends Asterix {
           }
         }
       }
+    }
+    // I048/161 Track Number
+    // TODO: test
+    if (isTrackNumberPresent) {
+      final firstByte = data[++i];
+      final secondByte = data[++i];
+      trackNumber = (firstByte << 8) + secondByte;
     }
     
   }
