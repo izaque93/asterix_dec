@@ -143,6 +143,7 @@ class Asterix48 extends Asterix {
   int? heightMeasuredBy3dRadar;
   bool? dopplerSpeedValid;
   int? dopplerSpeed, ambiguityRange, transmitterFrequency;
+  int? acasResolutionAdvisoryReport;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -542,6 +543,7 @@ class Asterix48 extends Asterix {
           ((info << 8) + data[++i]).toSigned(16) * 25; //[ft]
     }
     //Data Item I048/120, Radial Doppler Speed
+    //TODO: test
     if (isRadialDopplerSpeedPresent) {
       int info = data[++i];
       bool cal = bitfield(info, 8);
@@ -559,6 +561,7 @@ class Asterix48 extends Asterix {
       }
     }
     // Data Item I048/230, Communications/ACAS Capability and Flight Status
+    // TODO: Implement
     if (isCommunicationsACASCapabilityAndFlightStatusPresent) {
       int info = data[++i];
       int COM = info & 0xE0 >> 5;
@@ -570,6 +573,15 @@ class Asterix48 extends Asterix {
       bool AIC = bitfield(info, 6);
       bool B1A = bitfield(info, 5);
       int B1B = info & 0x0F;
+    }
+    // Data Item I048/260, ACAS Resolution Advisory Report
+    if (isACASResolutionAdvisoryReportPresent) {
+      acasResolutionAdvisoryReport = 0;
+      for (int j = 0; j < 7; j++) {
+        acasResolutionAdvisoryReport = acasResolutionAdvisoryReport! << 8;
+        acasResolutionAdvisoryReport =
+            acasResolutionAdvisoryReport! + data[++i];
+      }
     }
   }
 }
