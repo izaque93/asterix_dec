@@ -142,7 +142,7 @@ class Asterix48 extends Asterix {
   int? modoCLowQualityIndicators;
   int? heightMeasuredBy3dRadar;
   bool? dopplerSpeedValid;
-  int? dopplerSpeed ,ambiguityRange, transmitterFrequency;
+  int? dopplerSpeed, ambiguityRange, transmitterFrequency;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -550,14 +550,26 @@ class Asterix48 extends Asterix {
         info = data[++i];
         dopplerSpeedValid = bitfield(info, 8);
         dopplerSpeed = (((info & 0x03) << 8) + data[++i].toSigned(10)); //[m/s]
-
       }
       if (rds) {
         final rep = data[++i];
         dopplerSpeed = (data[++i] << 8) + data[++i];
-        ambiguityRange =(data[++i] << 8) + data[++i];
+        ambiguityRange = (data[++i] << 8) + data[++i];
         transmitterFrequency = (data[++i] << 8) + data[++i];
-              }
+      }
+    }
+    // Data Item I048/230, Communications/ACAS Capability and Flight Status
+    if (isCommunicationsACASCapabilityAndFlightStatusPresent) {
+      int info = data[++i];
+      int COM = info & 0xE0 >> 5;
+      int STAT = info & 0x1C >> 2;
+      bool SI = bitfield(info, 2);
+      info = data[++i];
+      bool MSCC = bitfield(info, 8);
+      bool ARC = bitfield(info, 7);
+      bool AIC = bitfield(info, 6);
+      bool B1A = bitfield(info, 5);
+      int B1B = info & 0x0F;
     }
   }
 }
