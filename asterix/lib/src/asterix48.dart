@@ -75,8 +75,7 @@ enum WarningErrorConditions {
 
 class Asterix48 extends Asterix {
   Asterix48? next;
-  int? sac;
-  int? sic;
+
   double? timeOfDay;
   DetectionType? detectionType;
   SimulatedOrActual? simulatedOrActual;
@@ -278,11 +277,8 @@ class Asterix48 extends Asterix {
     while (0x01 & fspec == 0x01) {
       fspec = data[++i];
     }
+    super.decodeDataSourceIdentifier([data[++i], data[++i]]);
 
-    if (isDataSourcePresent) {
-      sac = data[++i];
-      sic = data[++i];
-    }
     if (isTimeOfDayPresent) {
       timeOfDay = (data[++i] * 256 * 256 + data[++i] * 256 + data[++i]) * 1.0;
       // seconds
@@ -623,7 +619,7 @@ class Asterix48 extends Asterix {
       mode1Validated = !bitfield(info, 8);
       mode1Garbled = bitfield(info, 7);
       mode1ReplyOrigin = Mode1Or2CodeOrigin.values[(info & 0x20) >> 5];
-      mode1Code = "${(info & 0x1C)>>2}${info & 0x03}";
+      mode1Code = "${(info & 0x1C) >> 2}${info & 0x03}";
     }
     // I048/050, Mode-2 Code in Octal Representation
     // TODO: test
@@ -670,8 +666,8 @@ class Asterix48 extends Asterix {
     }
 
     //decode next packet if its present
-    if ( i < data.length -1){
-      next = Asterix48(data.sublist(i -1));
+    if (i < data.length - 1) {
+      next = Asterix48(data.sublist(i - 1));
     }
   }
 }
