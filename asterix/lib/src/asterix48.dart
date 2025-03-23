@@ -74,6 +74,7 @@ enum WarningErrorConditions {
 }
 
 class Asterix48 extends Asterix {
+  Asterix48? next;
   int? sac;
   int? sic;
   double? timeOfDay;
@@ -207,7 +208,7 @@ class Asterix48 extends Asterix {
 
     category = 48;
     int i = 1;
-    length = data[0] * 256 + data[1];
+    //length = data[0] * 256 + data[1];
     // FSPEC field
     int fspec = data[++i];
 
@@ -229,7 +230,6 @@ class Asterix48 extends Asterix {
       isAircraftIdentificationPresent = super.bitfield(fspec, 7);
       isModeSMBDataPresent = super.bitfield(fspec, 6);
       isTrackNumberPresent = super.bitfield(fspec, 5);
-      ;
       isCalculatedPositionInCartesianCoordinatesPresent = super.bitfield(
         fspec,
         4,
@@ -265,11 +265,11 @@ class Asterix48 extends Asterix {
     if (fspec & 0x01 == 0x01) {
       fspec = data[++i];
       isACASResolutionAdvisoryReportPresent = super.bitfield(fspec, 8);
-      ;
+
       isMode1InOctalRepresentationPresent = super.bitfield(fspec, 7);
       isMode2InOctalRepresentationPresent = super.bitfield(fspec, 6);
       isMode1InConfidenceIndicatorPresent = super.bitfield(fspec, 5);
-      ;
+
       isMode2InConfidenceIndicatorPresent = super.bitfield(fspec, 4);
       isSpecialPurposeFieldPresent = super.bitfield(fspec, 3);
       isReservedExpansionFieldPresent = super.bitfield(fspec, 2);
@@ -623,7 +623,7 @@ class Asterix48 extends Asterix {
       mode1Validated = !bitfield(info, 8);
       mode1Garbled = bitfield(info, 7);
       mode1ReplyOrigin = Mode1Or2CodeOrigin.values[(info & 0x20) >> 5];
-      mode1Code = "${info & 0x1C}${info & 0x03}";
+      mode1Code = "${(info & 0x1C)>>2}${info & 0x03}";
     }
     // I048/050, Mode-2 Code in Octal Representation
     // TODO: test
@@ -668,6 +668,10 @@ class Asterix48 extends Asterix {
       mode2qd2 = bitfield(info, 2);
       mode2qd1 = bitfield(info, 1);
     }
-    
+
+    //decode next packet if its present
+    if ( i < data.length -1){
+      next = Asterix48(data.sublist(i -1));
+    }
   }
 }
