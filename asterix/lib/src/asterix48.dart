@@ -137,7 +137,18 @@ class Asterix48 extends Asterix {
   double? groundspeedStandardDeviation;
   double? headingStandardDeviation;
   WarningErrorConditions? warningErrorConditions;
-  bool? qa4, qa2, qa1, qb4, qb2, qb1, qc4, qc2, qc1, qd4, qd2, qd1;
+  bool? mode3Aqa4,
+      mode3Aqa2,
+      mode3Aqa1,
+      mode3Aqb4,
+      mode3Aqb2,
+      mode3Aqb1,
+      mode3Aqc4,
+      mode3Aqc2,
+      mode3Aqc1,
+      mode3Aqd4,
+      mode3Aqd2,
+      mode3Aqd1;
   bool? modeCCodeValidated;
   bool? modeCCodeGarbled;
   int? modeCReplyInGrayNotation;
@@ -152,6 +163,19 @@ class Asterix48 extends Asterix {
   bool? mode2Garbled, mode2Validated;
   String? mode2Code;
   Mode1Or2CodeOrigin? mode2ReplyOrigin;
+  bool? mode1Qa4, mode1Qa2, mode1Qa1, mode1Qb2, mode1Qb1;
+  bool? mode2qa4,
+      mode2qa2,
+      mode2qa1,
+      mode2qb4,
+      mode2qb2,
+      mode2qb1,
+      mode2qc4,
+      mode2qc2,
+      mode2qc1,
+      mode2qd4,
+      mode2qd2,
+      mode2qd1;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -519,19 +543,19 @@ class Asterix48 extends Asterix {
     //Data Item I048/080, Mode-3/A Code Confidence Indicator
     if (isMode3ACodeConfidenceIndicatorPresent) {
       int info = data[++i];
-      qa4 = bitfield(info, 4);
-      qa2 = bitfield(info, 3);
-      qa1 = bitfield(info, 2);
-      qb4 = bitfield(info, 1);
+      mode3Aqa4 = bitfield(info, 4);
+      mode3Aqa2 = bitfield(info, 3);
+      mode3Aqa1 = bitfield(info, 2);
+      mode3Aqb4 = bitfield(info, 1);
       info = data[++i];
-      qb2 = bitfield(info, 8);
-      qb1 = bitfield(info, 7);
-      qc4 = bitfield(info, 6);
-      qc2 = bitfield(info, 5);
-      qc1 = bitfield(info, 4);
-      qd4 = bitfield(info, 3);
-      qd2 = bitfield(info, 2);
-      qd1 = bitfield(info, 1);
+      mode3Aqb2 = bitfield(info, 8);
+      mode3Aqb1 = bitfield(info, 7);
+      mode3Aqc4 = bitfield(info, 6);
+      mode3Aqc2 = bitfield(info, 5);
+      mode3Aqc1 = bitfield(info, 4);
+      mode3Aqd4 = bitfield(info, 3);
+      mode3Aqd2 = bitfield(info, 2);
+      mode3Aqd1 = bitfield(info, 1);
     }
     // I048/100 Mode-C Code and Confidence Indicator
     //TODO: test
@@ -609,11 +633,41 @@ class Asterix48 extends Asterix {
       mode2Validated = !bitfield(info, 8);
       mode2Garbled = bitfield(info, 7);
       mode2ReplyOrigin = Mode1Or2CodeOrigin.values[(info & 0x20) >> 5];
-     
+
       mode2Code = "${(info & 0x0E) >> 1}";
       mode2Code =
           "${mode2Code!}${((info & 0x01) << 2) + ((secondByte & 0xC0) >> 6)}";
       mode2Code = "${mode2Code!}${(info & 0x38) >> 3}${secondByte & 0x07}";
     }
+    // Data Item I048/065, Mode-1 Code Confidence Indicator
+    //TODO: Test
+    if (isMode1InConfidenceIndicatorPresent) {
+      int info = data[++i];
+      mode1Qa4 = bitfield(info, 5);
+      mode1Qa2 = bitfield(info, 4);
+      mode1Qa1 = bitfield(info, 3);
+      mode1Qb2 = bitfield(info, 2);
+      mode1Qb1 = bitfield(info, 1);
+    }
+
+    //Data Item I048/060, Mode-2 Code Confidence Indicator
+    //TODO: Test
+    if (isMode2InConfidenceIndicatorPresent) {
+      int info = data[++i];
+      mode2qa4 = bitfield(info, 4);
+      mode2qa2 = bitfield(info, 3);
+      mode2qa1 = bitfield(info, 2);
+      mode2qb4 = bitfield(info, 1);
+      info = data[++i];
+      mode2qb2 = bitfield(info, 8);
+      mode2qb1 = bitfield(info, 7);
+      mode2qc4 = bitfield(info, 6);
+      mode2qc2 = bitfield(info, 5);
+      mode2qc1 = bitfield(info, 4);
+      mode2qd4 = bitfield(info, 3);
+      mode2qd2 = bitfield(info, 2);
+      mode2qd1 = bitfield(info, 1);
+    }
+    
   }
 }
