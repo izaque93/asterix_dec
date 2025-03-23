@@ -31,6 +31,8 @@ enum ClimbingDescendingMode { maintaining, climbing, descending, unknown }
 
 enum TypeOfPlotCoordTransformationMechanism { radarPlane, slantRange }
 
+enum Mode1Or2CodeOrigin { transponder, smoothedBylocalTracker }
+
 enum WarningErrorConditions {
   notDefined,
   reflection,
@@ -144,6 +146,12 @@ class Asterix48 extends Asterix {
   bool? dopplerSpeedValid;
   int? dopplerSpeed, ambiguityRange, transmitterFrequency;
   int? acasResolutionAdvisoryReport;
+  bool? mode1Garbled, mode1Validated;
+  String? mode1Code;
+  Mode1Or2CodeOrigin? mode1ReplyOrigin;
+  bool? mode2Garbled, mode2Validated;
+  String? mode2Code;
+  Mode1Or2CodeOrigin? mode2ReplyOrigin;
 
   Asterix48(List<int> data) : super(data) {
     // first extended variables
@@ -575,6 +583,7 @@ class Asterix48 extends Asterix {
       int B1B = info & 0x0F;
     }
     // Data Item I048/260, ACAS Resolution Advisory Report
+    // TODO: test
     if (isACASResolutionAdvisoryReportPresent) {
       acasResolutionAdvisoryReport = 0;
       for (int j = 0; j < 7; j++) {
@@ -582,6 +591,29 @@ class Asterix48 extends Asterix {
         acasResolutionAdvisoryReport =
             acasResolutionAdvisoryReport! + data[++i];
       }
+    }
+    // I048/055, Mode-1 Code in Octal Representation
+    // TODO: test
+    if (isMode1InOctalRepresentationPresent) {
+      int info = data[++i];
+      mode1Validated = !bitfield(info, 8);
+      mode1Garbled = bitfield(info, 7);
+      mode1ReplyOrigin = Mode1Or2CodeOrigin.values[(info & 0x20) >> 5];
+      mode1Code = "${info & 0x1C}${info & 0x03}";
+    }
+    // I048/050, Mode-2 Code in Octal Representation
+    // TODO: test
+    if (isMode2InOctalRepresentationPresent) {
+      int info = data[++i];
+      int secondByte = data[++i];
+      mode2Validated = !bitfield(info, 8);
+      mode2Garbled = bitfield(info, 7);
+      mode2ReplyOrigin = Mode1Or2CodeOrigin.values[(info & 0x20) >> 5];
+     
+      mode2Code = "${(info & 0x0E) >> 1}";
+      mode2Code =
+          "${mode2Code!}${((info & 0x01) << 2) + ((secondByte & 0xC0) >> 6)}";
+      mode2Code = "${mode2Code!}${(info & 0x38) >> 3}${secondByte & 0x07}";
     }
   }
 }
