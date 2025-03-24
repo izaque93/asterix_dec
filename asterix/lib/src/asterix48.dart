@@ -76,7 +76,6 @@ enum WarningErrorConditions {
 class Asterix48 extends Asterix {
   Asterix48? next;
 
-  double? timeOfDay;
   DetectionType? detectionType;
   SimulatedOrActual? simulatedOrActual;
   int? rdpChain;
@@ -277,12 +276,12 @@ class Asterix48 extends Asterix {
     while (0x01 & fspec == 0x01) {
       fspec = data[++i];
     }
-    super.decodeDataSourceIdentifier([data[++i], data[++i]]);
+    if (isDataSourcePresent) {
+      super.decodeDataSourceIdentifier([data[++i], data[++i]]);
+    }
 
     if (isTimeOfDayPresent) {
-      timeOfDay = (data[++i] * 256 * 256 + data[++i] * 256 + data[++i]) * 1.0;
-      // seconds
-      timeOfDay = timeOfDay! / 128;
+      super.decodeTimeOfDay([data[++i], data[++i], data[++i]]);
     }
     // I048/020 Target Report Descriptor
     if (istargetReportDescriptorPresent) {

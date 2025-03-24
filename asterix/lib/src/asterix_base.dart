@@ -24,6 +24,7 @@ class Asterix {
   late int length;
   late int sac;
   late int sic;
+  double? timeOfDay;
 
   bool bitfield(int byte, int field) {
     return (byte >> (field - 1)) & 0x01 == 1;
@@ -32,6 +33,15 @@ class Asterix {
   decodeDataSourceIdentifier(List<int> data) {
     sac = data[0];
     sic = data[1];
+  }
+
+  decodeTimeOfDay(List<int> data){
+    
+
+      timeOfDay = (data[0] * 256 * 256 + data[1] * 256 + data[2]) * 1.0;
+      // seconds
+      timeOfDay = timeOfDay! / 128;
+    
   }
 
   Asterix(List<int> data);
