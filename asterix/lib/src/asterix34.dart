@@ -11,13 +11,47 @@ enum MessageType {
   modeSJammingStrobeMessage,
 }
 
+enum PsrChannelSelectionStatus {
+  noChannelSelected,
+  channelASelected,
+  channelBSelected,
+  diversityModeAandBSelected,
+}
+
+enum SsrOrMdsChannelSelectionStatus {
+  noChannelSelected,
+  channelASelected,
+  channelBSelected,
+  invalidCombination,
+}
+
 class Asterix34 extends Asterix {
   Asterix34? next;
   MessageType? messageType;
-  
-  double? sectorNumber;
-  
-  double? antennaRotationPeriod;
+  PsrChannelSelectionStatus? psrChannelSelectionStatus;
+  SsrOrMdsChannelSelectionStatus? ssrChannelSelectionStatus,
+      mdsChannelSelectionStatus;
+  double? sectorNumber, antennaRotationPeriod;
+  int? radarDataProcessorChain,
+      psrSelectedAntena,
+      ssrSelectedAntena,
+      mdsSelectedAntena,
+      channelSelectionForSurveillanceCoordinateFunction,
+      channelSelectionForDataLinkFunction;
+  bool? isResetOrRestartOfRdpcChain,
+      radarDataProcessorOverload,
+      transmissionSubsystemOverload,
+      monitoringSystemDisconnected,
+      timeSourceValid,
+      psrOverload,
+      systemIsReleasedForOperacionalUse,
+      psrMonitoringSystemDisconnected,
+      ssrOverload,
+      ssrMonitoringSystemDisconnected,
+      mdsOverload,
+      mdsMonitoringSystemDisconnected,
+      overloadInSurveillanceCoordinateFunction,
+      overloadInDataLinkFunction;
 
   Asterix34(List<int> data) : super(data) {
     category = 34;
@@ -29,6 +63,7 @@ class Asterix34 extends Asterix {
     final isTimeOfDayPresent = super.bitfield(fspec, 6);
     final isSectorNumberPresent = super.bitfield(fspec, 5);
     final isAntennaRotationPeriodPresent = super.bitfield(fspec, 4);
+    final isSystemConfigurationAndStatusPresent = super.bitfield(fspec, 3);
     //Data Item I034/010, Data Source Identifier
     if (isDataSourcePresent) {
       super.decodeDataSourceIdentifier([data[++i], data[++i]]);
@@ -50,8 +85,67 @@ class Asterix34 extends Asterix {
     }
 
     //I034/041 Antenna Rotation Speed
-    if (isAntennaRotationPeriodPresent){
+    //TODO: test
+    if (isAntennaRotationPeriodPresent) {
       antennaRotationPeriod = data[++i] * 256 + data[++i] / 128;
+    }
+
+    // I034/050, System Configuration and Status
+
+    if (isSystemConfigurationAndStatusPresent) {
+      int info = data[++i];
+      final com = bitfield(info, 8);
+      final psr = bitfield(info, 5);
+      final ssr = bitfield(info, 4);
+      final mds = bitfield(info, 3);
+      final fx = bitfield(info, 1);
+
+      // extention field
+      if (fx) {
+        final _ = data[++i];
+      }
+      if (com) {
+        info = data[++i];
+        systemIsReleasedForOperacionalUse = !bitfield(info, 8);
+        radarDataProcessorChain = bitfield(info, 7) ? 2 : 1;
+        isResetOrRestartOfRdpcChain = bitfield(info, 6);
+        radarDataProcessorOverload = bitfield(info, 5);
+        transmissionSubsystemOverload = bitfield(info, 4);
+        monitoringSystemDisconnected = bitfield(info, 3);
+        timeSourceValid = !bitfield(info, 2);
+      }
+      if (psr) {
+        info = data[++i];
+        psrSelectedAntena = bitfield(info, 8) ? 2 : 1;
+        psrChannelSelectionStatus =
+            PsrChannelSelectionStatus.values[((info & 0x60) >> 5)];
+        psrOverload = bitfield(info, 5);
+        psrMonitoringSystemDisconnected = bitfield(info, 4);
+      }
+      if (ssr) {
+        //TODO: test
+        info = data[++i];
+        ssrSelectedAntena = bitfield(info, 8) ? 2 : 1;
+        ssrChannelSelectionStatus =
+            SsrOrMdsChannelSelectionStatus.values[((info & 0x60) >> 5)];
+        ssrOverload = bitfield(info, 5);
+        ssrMonitoringSystemDisconnected = bitfield(info, 4);
+      }
+      if (mds) {
+        info = data[++i];
+        mdsSelectedAntena = bitfield(info, 8) ? 2 : 1;
+        mdsChannelSelectionStatus =
+            SsrOrMdsChannelSelectionStatus.values[((info & 0x60) >> 5)];
+        mdsOverload = bitfield(info, 5);
+        mdsMonitoringSystemDisconnected = bitfield(info, 4);
+        channelSelectionForSurveillanceCoordinateFunction =
+            bitfield(info, 3) ? 2 : 1;
+        channelSelectionForDataLinkFunction = bitfield(info, 2) ? 2 : 1;
+        overloadInSurveillanceCoordinateFunction = bitfield(info, 1);
+
+        info = data[++i];
+        overloadInDataLinkFunction = bitfield(info, 8);
+      }
     }
   }
 }

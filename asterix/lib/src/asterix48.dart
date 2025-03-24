@@ -612,7 +612,6 @@ class Asterix48 extends Asterix {
       }
     }
     // I048/055, Mode-1 Code in Octal Representation
-    // TODO: test
     if (isMode1InOctalRepresentationPresent) {
       int info = data[++i];
       mode1Validated = !bitfield(info, 8);

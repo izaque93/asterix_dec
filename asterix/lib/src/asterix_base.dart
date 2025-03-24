@@ -36,12 +36,9 @@ class Asterix {
   }
 
   decodeTimeOfDay(List<int> data){
-    
-
       timeOfDay = (data[0] * 256 * 256 + data[1] * 256 + data[2]) * 1.0;
       // seconds
       timeOfDay = timeOfDay! / 128;
-    
   }
 
   Asterix(List<int> data);
