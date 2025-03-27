@@ -37,7 +37,14 @@ class Asterix34 extends Asterix {
       ssrSelectedAntena,
       mdsSelectedAntena,
       channelSelectionForSurveillanceCoordinateFunction,
+      reductionStepDueOverloadInRDP,
+      reductionStepDueOverloadIntransmission,
+      reductionStepDueOverloadInPSR,
+      psrSTCMapInUse,
+      reductionStepDueOverloadInSSR,
+      reductionStepDueOverloadInMDS,
       channelSelectionForDataLinkFunction;
+
   bool? isResetOrRestartOfRdpcChain,
       radarDataProcessorOverload,
       transmissionSubsystemOverload,
@@ -51,7 +58,8 @@ class Asterix34 extends Asterix {
       mdsOverload,
       mdsMonitoringSystemDisconnected,
       overloadInSurveillanceCoordinateFunction,
-      overloadInDataLinkFunction;
+      overloadInDataLinkFunction,
+      isMdsClusterStateAutonomous;
 
   Asterix34(List<int> data) : super(data) {
     category = 34;
@@ -64,6 +72,7 @@ class Asterix34 extends Asterix {
     final isSectorNumberPresent = super.bitfield(fspec, 5);
     final isAntennaRotationPeriodPresent = super.bitfield(fspec, 4);
     final isSystemConfigurationAndStatusPresent = super.bitfield(fspec, 3);
+    final isSystemProcessingModePresent = super.bitfield(fspec, 2);
     //Data Item I034/010, Data Source Identifier
     if (isDataSourcePresent) {
       super.decodeDataSourceIdentifier([data[++i], data[++i]]);
@@ -145,6 +154,42 @@ class Asterix34 extends Asterix {
 
         info = data[++i];
         overloadInDataLinkFunction = bitfield(info, 8);
+      }
+    }
+
+    // I034/060, System Processing Mode
+    //TODO: Test
+    if (isSystemProcessingModePresent) {
+      int info = data[++i];
+      final com = bitfield(info, 8);
+      final psr = bitfield(info, 5);
+      final ssr = bitfield(info, 4);
+      final mds = bitfield(info, 3);
+      final fx = bitfield(info, 1);
+
+      // extention field
+      if (fx) {
+        final _ = data[++i];
+      }
+
+      if (com) {
+        final info = data[++i];
+        reductionStepDueOverloadInRDP = (info & 0x70) >> 4;
+        reductionStepDueOverloadIntransmission = (info & 0x0E) >> 1;
+      }
+      if (psr) {
+        final info = data[++i];
+        reductionStepDueOverloadInPSR = (info & 0x70) >> 4;
+        psrSTCMapInUse = ((info & 0x0C) >> 2) + 1;
+      }
+      if (ssr) {
+        final info = data[++i];
+        reductionStepDueOverloadInSSR = (info & 0xE0) >> 5;
+      }
+      if (mds) {
+        final info = data[++i];
+        reductionStepDueOverloadInMDS = (info & 0xE0) >> 5;
+        isMdsClusterStateAutonomous = bitfield(info, 5);
       }
     }
   }
