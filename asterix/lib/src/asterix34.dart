@@ -25,12 +25,38 @@ enum SsrOrMdsChannelSelectionStatus {
   invalidCombination,
 }
 
+enum CountType {
+  noDetections,
+  singlePsrTargetReports,
+  singleSsrTargetReports,
+  psrAndSsrTargetReports,
+  singleAllCallTargetReports,
+  singleRollCallTargetReports,
+  allCallAndPsrTargetReports,
+  rollCallAndPsrTargetReports,
+  filterForWheaterData,
+  filterForJammingStrobe,
+  filterForPsrData,
+  filterForSsrModeSData,
+  filterForSsrModeSAndPsrData,
+  filterForEnhancedSurveillanceData,
+  filterForPsrAndEnhancedSurveillance,
+  filterForPsrSsrEnhancedSurveillanceDataNotInArea,
+  filterForPsrSsrMdsEnhancedSurveillanceData,
+  reInterrogationsPerSector,
+  bdsSwapAndWrongDfRepliesPerSector,
+  modeACFruitPerSector,
+  mdsFruitPerSector,
+}
+
 class Asterix34 extends Asterix {
   Asterix34? next;
   MessageType? messageType;
   PsrChannelSelectionStatus? psrChannelSelectionStatus;
   SsrOrMdsChannelSelectionStatus? ssrChannelSelectionStatus,
       mdsChannelSelectionStatus;
+  List<CountType> countType = [];
+  List<int> count = [];
   double? sectorNumber, antennaRotationPeriod;
   int? radarDataProcessorChain,
       psrSelectedAntena,
@@ -64,15 +90,22 @@ class Asterix34 extends Asterix {
   Asterix34(List<int> data) : super(data) {
     category = 34;
     int i = 1;
+    bool isMessageCountValuesPresent = false;
     // FSPEC field
     int fspec = data[++i];
-    final isDataSourcePresent = super.bitfield(fspec, 8);
-    final isMessageTypePresent = super.bitfield(fspec, 7);
-    final isTimeOfDayPresent = super.bitfield(fspec, 6);
-    final isSectorNumberPresent = super.bitfield(fspec, 5);
-    final isAntennaRotationPeriodPresent = super.bitfield(fspec, 4);
-    final isSystemConfigurationAndStatusPresent = super.bitfield(fspec, 3);
-    final isSystemProcessingModePresent = super.bitfield(fspec, 2);
+    final isDataSourcePresent = bitfield(fspec, 8);
+    final isMessageTypePresent = bitfield(fspec, 7);
+    final isTimeOfDayPresent = bitfield(fspec, 6);
+    final isSectorNumberPresent = bitfield(fspec, 5);
+    final isAntennaRotationPeriodPresent = bitfield(fspec, 4);
+    final isSystemConfigurationAndStatusPresent = bitfield(fspec, 3);
+    final isSystemProcessingModePresent = bitfield(fspec, 2);
+
+    // Read next FSPEC field (1)
+    if (bitfield(fspec, 1)) {
+      fspec = data[++i];
+      isMessageCountValuesPresent = bitfield(fspec, 8);
+    }
     //Data Item I034/010, Data Source Identifier
     if (isDataSourcePresent) {
       super.decodeDataSourceIdentifier([data[++i], data[++i]]);
@@ -191,6 +224,23 @@ class Asterix34 extends Asterix {
         reductionStepDueOverloadInMDS = (info & 0xE0) >> 5;
         isMdsClusterStateAutonomous = bitfield(info, 5);
       }
+    }
+
+    //I034/070, Message Count Values
+    //TODO: Test
+    if (isMessageCountValuesPresent) {
+      final rep = data[++i];
+
+      for (int i = 0; i < rep; i++) {
+        final info = data[++i];
+        final info2 = data[++i];
+        countType.add(CountType.values[((info & 0xF8) >> 3)]);
+        count.add(((info & 0x07) << 8) + info2);
+      }
+    }
+    //decode next packet if its present
+    if (i < data.length - 1) {
+      next = Asterix34(data.sublist(i - 1));
     }
   }
 }
