@@ -57,7 +57,7 @@ class Asterix34 extends Asterix {
       mdsChannelSelectionStatus;
   List<CountType> countType = [];
   List<int> count = [];
-  double? sectorNumber, antennaRotationPeriod;
+  double? sectorNumber, antennaRotationPeriod, azimuthError, rangeError;
   int? radarDataProcessorChain,
       psrSelectedAntena,
       ssrSelectedAntena,
@@ -91,6 +91,7 @@ class Asterix34 extends Asterix {
     category = 34;
     int i = 1;
     bool isMessageCountValuesPresent = false;
+    bool isCollimationErrorPresent = false;
     // FSPEC field
     int fspec = data[++i];
     final isDataSourcePresent = bitfield(fspec, 8);
@@ -105,6 +106,7 @@ class Asterix34 extends Asterix {
     if (bitfield(fspec, 1)) {
       fspec = data[++i];
       isMessageCountValuesPresent = bitfield(fspec, 8);
+      isCollimationErrorPresent = bitfield(fspec, 7);
     }
     //Data Item I034/010, Data Source Identifier
     if (isDataSourcePresent) {
@@ -242,5 +244,14 @@ class Asterix34 extends Asterix {
     if (i < data.length - 1) {
       next = Asterix34(data.sublist(i - 1));
     }
+
+    //I034/090, Collimation Error
+    //TODO: test
+    if (isCollimationErrorPresent) {
+      azimuthError = data[++i] / 128;
+      rangeError = data[++i] * 0.022;
+    }
+
+    
   }
 }
