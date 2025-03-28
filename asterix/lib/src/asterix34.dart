@@ -78,7 +78,9 @@ class Asterix34 extends Asterix {
       genericWindowRhoStart,
       genericWindowRhoEnd,
       genericWindowThetaStart,
-      genericWindowThetaEnd;
+      genericWindowThetaEnd,
+      dataSourceLatitude,
+      dataSourceLongitude;
 
   int? radarDataProcessorChain,
       psrSelectedAntena,
@@ -91,6 +93,7 @@ class Asterix34 extends Asterix {
       psrSTCMapInUse,
       reductionStepDueOverloadInSSR,
       reductionStepDueOverloadInMDS,
+      dataSourceHeight,
       channelSelectionForDataLinkFunction;
 
   bool? isResetOrRestartOfRdpcChain,
@@ -116,6 +119,7 @@ class Asterix34 extends Asterix {
     bool isCollimationErrorPresent = false;
     bool isGenericPolarWindowPresent = false;
     bool isDataFilterPresent = false;
+    bool isPositionOfDataSourcePresent = false;
     // FSPEC field
     int fspec = data[++i];
     final isDataSourcePresent = bitfield(fspec, 8);
@@ -132,7 +136,7 @@ class Asterix34 extends Asterix {
       isMessageCountValuesPresent = bitfield(fspec, 8);
       isGenericPolarWindowPresent = bitfield(fspec, 7);
       isDataFilterPresent = bitfield(fspec, 6);
-
+      isPositionOfDataSourcePresent = bitfield(fspec, 5);
       isCollimationErrorPresent = bitfield(fspec, 4);
     }
     //Data Item I034/010, Data Source Identifier
@@ -286,6 +290,18 @@ class Asterix34 extends Asterix {
     if (isDataFilterPresent) {
       final info = data[++i];
       dataFilterType = DataFilterType.values[info];
+    }
+
+    //I034/120 3D-Position of Data Source
+    //TODO: Test
+    if (isPositionOfDataSourcePresent) {
+      dataSourceHeight = (data[++i] * 256 + data[++i]); //[m]
+      dataSourceLatitude =
+          (data[++i] * 256 + data[++i]).toDouble() * 256 + data[++i];
+      dataSourceLatitude = dataSourceLatitude! * 2.145767 / 100000;
+      dataSourceLongitude =
+          (data[++i] * 256 + data[++i]).toDouble() * 256 + data[++i];
+      dataSourceLongitude = dataSourceLongitude! * 2.145767 / 100000;
     }
 
     //I034/090, Collimation Error
