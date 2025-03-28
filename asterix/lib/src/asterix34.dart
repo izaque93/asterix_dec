@@ -49,12 +49,26 @@ enum CountType {
   mdsFruitPerSector,
 }
 
+enum DataFilterType {
+  invalidValue,
+  wheaterData,
+  jammingStrobe,
+  psrData,
+  ssrModeSData,
+  ssrModeSPsrData,
+  enhancedSurveillanceData,
+  ssrAndEnhancedSurveillanceData,
+  psrSsrEnhancedSurveillanceDataNotInArea,
+  psrSsrMdsEnhancedSurveillanceData,
+}
+
 class Asterix34 extends Asterix {
   Asterix34? next;
   MessageType? messageType;
   PsrChannelSelectionStatus? psrChannelSelectionStatus;
   SsrOrMdsChannelSelectionStatus? ssrChannelSelectionStatus,
       mdsChannelSelectionStatus;
+  DataFilterType? dataFilterType;
   List<CountType> countType = [];
   List<int> count = [];
   double? sectorNumber,
@@ -101,6 +115,7 @@ class Asterix34 extends Asterix {
     bool isMessageCountValuesPresent = false;
     bool isCollimationErrorPresent = false;
     bool isGenericPolarWindowPresent = false;
+    bool isDataFilterPresent = false;
     // FSPEC field
     int fspec = data[++i];
     final isDataSourcePresent = bitfield(fspec, 8);
@@ -116,6 +131,8 @@ class Asterix34 extends Asterix {
       fspec = data[++i];
       isMessageCountValuesPresent = bitfield(fspec, 8);
       isGenericPolarWindowPresent = bitfield(fspec, 7);
+      isDataFilterPresent = bitfield(fspec, 6);
+
       isCollimationErrorPresent = bitfield(fspec, 4);
     }
     //Data Item I034/010, Data Source Identifier
@@ -262,6 +279,13 @@ class Asterix34 extends Asterix {
       genericWindowRhoEnd = (data[++i] * 256 + data[++i]) / 256; //[NM]
       genericWindowThetaStart = (data[++i] * 256 + data[++i]) * 0.0055;
       genericWindowThetaEnd = (data[++i] * 256 + data[++i]) * 0.0055;
+    }
+
+    //I034/110 Data Filter
+    //TODO: Test
+    if (isDataFilterPresent) {
+      final info = data[++i];
+      dataFilterType = DataFilterType.values[info];
     }
 
     //I034/090, Collimation Error
