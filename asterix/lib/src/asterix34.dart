@@ -57,7 +57,15 @@ class Asterix34 extends Asterix {
       mdsChannelSelectionStatus;
   List<CountType> countType = [];
   List<int> count = [];
-  double? sectorNumber, antennaRotationPeriod, azimuthError, rangeError;
+  double? sectorNumber,
+      antennaRotationPeriod,
+      collimationAzimuthError,
+      collimationRangeError,
+      genericWindowRhoStart,
+      genericWindowRhoEnd,
+      genericWindowThetaStart,
+      genericWindowThetaEnd;
+
   int? radarDataProcessorChain,
       psrSelectedAntena,
       ssrSelectedAntena,
@@ -92,6 +100,7 @@ class Asterix34 extends Asterix {
     int i = 1;
     bool isMessageCountValuesPresent = false;
     bool isCollimationErrorPresent = false;
+    bool isGenericPolarWindowPresent = false;
     // FSPEC field
     int fspec = data[++i];
     final isDataSourcePresent = bitfield(fspec, 8);
@@ -106,7 +115,8 @@ class Asterix34 extends Asterix {
     if (bitfield(fspec, 1)) {
       fspec = data[++i];
       isMessageCountValuesPresent = bitfield(fspec, 8);
-      isCollimationErrorPresent = bitfield(fspec, 7);
+      isGenericPolarWindowPresent = bitfield(fspec, 7);
+      isCollimationErrorPresent = bitfield(fspec, 4);
     }
     //Data Item I034/010, Data Source Identifier
     if (isDataSourcePresent) {
@@ -245,13 +255,20 @@ class Asterix34 extends Asterix {
       next = Asterix34(data.sublist(i - 1));
     }
 
+    //I034/100, Generic Polar Window
+    //TODO: Test
+    if (isGenericPolarWindowPresent) {
+      genericWindowRhoStart = (data[++i] * 256 + data[++i]) / 256; //[NM]
+      genericWindowRhoEnd = (data[++i] * 256 + data[++i]) / 256; //[NM]
+      genericWindowThetaStart = (data[++i] * 256 + data[++i]) * 0.0055;
+      genericWindowThetaEnd = (data[++i] * 256 + data[++i]) * 0.0055;
+    }
+
     //I034/090, Collimation Error
     //TODO: test
     if (isCollimationErrorPresent) {
-      azimuthError = data[++i] / 128;
-      rangeError = data[++i] * 0.022;
+      collimationAzimuthError = data[++i].toSigned(8) / 128;
+      collimationRangeError = data[++i].toSigned(8) * 0.022;
     }
-
-    
   }
 }
