@@ -156,7 +156,7 @@ class Asterix34 extends Asterix {
     //I034/020 Sector Number
     if (isSectorNumberPresent) {
       final info = data[++i];
-      sectorNumber = info * 1.41; //[°]
+      sectorNumber = info * 1.40625; //[°]
     }
 
     //I034/041 Antenna Rotation Speed
@@ -309,6 +309,11 @@ class Asterix34 extends Asterix {
     if (isCollimationErrorPresent) {
       collimationAzimuthError = data[++i].toSigned(8) / 128;
       collimationRangeError = data[++i].toSigned(8) * 0.022;
+    }
+
+    //decode next packet if its present
+    if (i < data.length - 1) {
+      next = Asterix34(data.sublist(i - 1));
     }
   }
 }
