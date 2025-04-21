@@ -162,7 +162,7 @@ class Asterix34 extends Asterix {
     //I034/041 Antenna Rotation Speed
     //TODO: test
     if (isAntennaRotationPeriodPresent) {
-      antennaRotationPeriod = data[++i] * 256 + data[++i] / 128;
+      antennaRotationPeriod = (data[++i] * 256 + data[++i]) / 128;
     }
 
     // I034/050, System Configuration and Status
@@ -271,10 +271,7 @@ class Asterix34 extends Asterix {
         count.add(((info & 0x07) << 8) + info2);
       }
     }
-    //decode next packet if its present
-    if (i < data.length - 1) {
-      next = Asterix34(data.sublist(i - 1));
-    }
+
 
     //I034/100, Generic Polar Window
     //TODO: Test
