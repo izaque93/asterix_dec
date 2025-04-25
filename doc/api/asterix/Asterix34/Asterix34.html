@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the Asterix34.new constructor from Class Asterix34 from the asterix library, for the Dart programming language.">
+  <title>Asterix34.new constructor - Asterix34 - asterix library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">asterix</a></li>
+    <li><a href="../../asterix/">asterix.dart</a></li>
+    <li><a href="../../asterix/Asterix34-class.html">Asterix34</a></li>
+    <li class="self-crumb">Asterix34.new constructor</li>
+  </ol>
+  <div class="self-name">Asterix34.new</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="asterix&#47;Asterix34-class-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-constructor">Asterix34</span> constructor 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+      <span class="name ">Asterix34</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="-param-data"><span class="type-annotation"><a href="https://api.dart.dev/dev/3.8.0-171.0.dev/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/dev/3.8.0-171.0.dev/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">data</span></span></li>
+</ol>)
+    </section>
+    
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Asterix34(List&lt;int&gt; data) : super(data) {
+  category = 34;
+  int i = 1;
+  bool isMessageCountValuesPresent = false;
+  bool isCollimationErrorPresent = false;
+  bool isGenericPolarWindowPresent = false;
+  bool isDataFilterPresent = false;
+  bool isPositionOfDataSourcePresent = false;
+  &#47;&#47; FSPEC field
+  int fspec = data[++i];
+  final isDataSourcePresent = bitfield(fspec, 8);
+  final isMessageTypePresent = bitfield(fspec, 7);
+  final isTimeOfDayPresent = bitfield(fspec, 6);
+  final isSectorNumberPresent = bitfield(fspec, 5);
+  final isAntennaRotationPeriodPresent = bitfield(fspec, 4);
+  final isSystemConfigurationAndStatusPresent = bitfield(fspec, 3);
+  final isSystemProcessingModePresent = bitfield(fspec, 2);
+
+  &#47;&#47; Read next FSPEC field (1)
+  if (bitfield(fspec, 1)) {
+    fspec = data[++i];
+    isMessageCountValuesPresent = bitfield(fspec, 8);
+    isGenericPolarWindowPresent = bitfield(fspec, 7);
+    isDataFilterPresent = bitfield(fspec, 6);
+    isPositionOfDataSourcePresent = bitfield(fspec, 5);
+    isCollimationErrorPresent = bitfield(fspec, 4);
+  }
+  &#47;&#47;Data Item I034&#47;010, Data Source Identifier
+  if (isDataSourcePresent) {
+    super.decodeDataSourceIdentifier([data[++i], data[++i]]);
+  }
+  &#47;&#47; I034&#47;000 Message Type
+  if (isMessageTypePresent) {
+    final info = data[++i];
+    messageType = MessageType.values[info];
+  }
+  &#47;&#47; I034&#47;030 Time-of-Day
+  if (isTimeOfDayPresent) {
+    super.decodeTimeOfDay([data[++i], data[++i], data[++i]]);
+  }
+
+  &#47;&#47;I034&#47;020 Sector Number
+  if (isSectorNumberPresent) {
+    final info = data[++i];
+    sectorNumber = info * 1.40625; &#47;&#47;[°]
+  }
+
+  &#47;&#47;I034&#47;041 Antenna Rotation Speed
+  &#47;&#47;TODO: test
+  if (isAntennaRotationPeriodPresent) {
+    antennaRotationPeriod = (data[++i] * 256 + data[++i]) &#47; 128;
+  }
+
+  &#47;&#47; I034&#47;050, System Configuration and Status
+
+  if (isSystemConfigurationAndStatusPresent) {
+    int info = data[++i];
+    final com = bitfield(info, 8);
+    final psr = bitfield(info, 5);
+    final ssr = bitfield(info, 4);
+    final mds = bitfield(info, 3);
+    final fx = bitfield(info, 1);
+
+    &#47;&#47; extention field
+    if (fx) {
+      final _ = data[++i];
+    }
+    if (com) {
+      info = data[++i];
+      systemIsReleasedForOperacionalUse = !bitfield(info, 8);
+      radarDataProcessorChain = bitfield(info, 7) ? 2 : 1;
+      isResetOrRestartOfRdpcChain = bitfield(info, 6);
+      radarDataProcessorOverload = bitfield(info, 5);
+      transmissionSubsystemOverload = bitfield(info, 4);
+      monitoringSystemDisconnected = bitfield(info, 3);
+      timeSourceValid = !bitfield(info, 2);
+    }
+    if (psr) {
+      info = data[++i];
+      psrSelectedAntena = bitfield(info, 8) ? 2 : 1;
+      psrChannelSelectionStatus =
+          PsrChannelSelectionStatus.values[((info &amp; 0x60) &gt;&gt; 5)];
+      psrOverload = bitfield(info, 5);
+      psrMonitoringSystemDisconnected = bitfield(info, 4);
+    }
+    if (ssr) {
+      &#47;&#47;TODO: test
+      info = data[++i];
+      ssrSelectedAntena = bitfield(info, 8) ? 2 : 1;
+      ssrChannelSelectionStatus =
+          SsrOrMdsChannelSelectionStatus.values[((info &amp; 0x60) &gt;&gt; 5)];
+      ssrOverload = bitfield(info, 5);
+      ssrMonitoringSystemDisconnected = bitfield(info, 4);
+    }
+    if (mds) {
+      info = data[++i];
+      mdsSelectedAntena = bitfield(info, 8) ? 2 : 1;
+      mdsChannelSelectionStatus =
+          SsrOrMdsChannelSelectionStatus.values[((info &amp; 0x60) &gt;&gt; 5)];
+      mdsOverload = bitfield(info, 5);
+      mdsMonitoringSystemDisconnected = bitfield(info, 4);
+      channelSelectionForSurveillanceCoordinateFunction =
+          bitfield(info, 3) ? 2 : 1;
+      channelSelectionForDataLinkFunction = bitfield(info, 2) ? 2 : 1;
+      overloadInSurveillanceCoordinateFunction = bitfield(info, 1);
+
+      info = data[++i];
+      overloadInDataLinkFunction = bitfield(info, 8);
+    }
+  }
+
+  &#47;&#47; I034&#47;060, System Processing Mode
+  &#47;&#47;TODO: Test
+  if (isSystemProcessingModePresent) {
+    int info = data[++i];
+    final com = bitfield(info, 8);
+    final psr = bitfield(info, 5);
+    final ssr = bitfield(info, 4);
+    final mds = bitfield(info, 3);
+    final fx = bitfield(info, 1);
+
+    &#47;&#47; extention field
+    if (fx) {
+      final _ = data[++i];
+    }
+
+    if (com) {
+      final info = data[++i];
+      reductionStepDueOverloadInRDP = (info &amp; 0x70) &gt;&gt; 4;
+      reductionStepDueOverloadIntransmission = (info &amp; 0x0E) &gt;&gt; 1;
+    }
+    if (psr) {
+      final info = data[++i];
+      reductionStepDueOverloadInPSR = (info &amp; 0x70) &gt;&gt; 4;
+      psrSTCMapInUse = ((info &amp; 0x0C) &gt;&gt; 2) + 1;
+    }
+    if (ssr) {
+      final info = data[++i];
+      reductionStepDueOverloadInSSR = (info &amp; 0xE0) &gt;&gt; 5;
+    }
+    if (mds) {
+      final info = data[++i];
+      reductionStepDueOverloadInMDS = (info &amp; 0xE0) &gt;&gt; 5;
+      isMdsClusterStateAutonomous = bitfield(info, 5);
+    }
+  }
+
+  &#47;&#47;I034&#47;070, Message Count Values
+  &#47;&#47;TODO: Test
+  if (isMessageCountValuesPresent) {
+    final rep = data[++i];
+
+    for (int i = 0; i &lt; rep; i++) {
+      final info = data[++i];
+      final info2 = data[++i];
+      countType.add(CountType.values[((info &amp; 0xF8) &gt;&gt; 3)]);
+      count.add(((info &amp; 0x07) &lt;&lt; 8) + info2);
+    }
+  }
+
+
+  &#47;&#47;I034&#47;100, Generic Polar Window
+  &#47;&#47;TODO: Test
+  if (isGenericPolarWindowPresent) {
+    genericWindowRhoStart = (data[++i] * 256 + data[++i]) &#47; 256; &#47;&#47;[NM]
+    genericWindowRhoEnd = (data[++i] * 256 + data[++i]) &#47; 256; &#47;&#47;[NM]
+    genericWindowThetaStart = (data[++i] * 256 + data[++i]) * 0.0055;
+    genericWindowThetaEnd = (data[++i] * 256 + data[++i]) * 0.0055;
+  }
+
+  &#47;&#47;I034&#47;110 Data Filter
+  &#47;&#47;TODO: Test
+  if (isDataFilterPresent) {
+    final info = data[++i];
+    dataFilterType = DataFilterType.values[info];
+  }
+
+  &#47;&#47;I034&#47;120 3D-Position of Data Source
+  &#47;&#47;TODO: Test
+  if (isPositionOfDataSourcePresent) {
+    dataSourceHeight = (data[++i] * 256 + data[++i]); &#47;&#47;[m]
+    dataSourceLatitude =
+        (data[++i] * 256 + data[++i]).toDouble() * 256 + data[++i];
+    dataSourceLatitude = dataSourceLatitude! * 2.145767 &#47; 100000;
+    dataSourceLongitude =
+        (data[++i] * 256 + data[++i]).toDouble() * 256 + data[++i];
+    dataSourceLongitude = dataSourceLongitude! * 2.145767 &#47; 100000;
+  }
+
+  &#47;&#47;I034&#47;090, Collimation Error
+  &#47;&#47;TODO: test
+  if (isCollimationErrorPresent) {
+    collimationAzimuthError = data[++i].toSigned(8) &#47; 128;
+    collimationRangeError = data[++i].toSigned(8) * 0.022;
+  }
+
+  &#47;&#47;decode next packet if its present
+  if (i &lt; data.length - 1) {
+    next = Asterix34(data.sublist(i - 1));
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">asterix</a></li>
+    <li><a href="../../asterix/">asterix</a></li>
+    <li><a href="../../asterix/Asterix34-class.html">Asterix34</a></li>
+    <li class="self-crumb">Asterix34.new constructor</li>
+</ol>
+
+    <h5>Asterix34 class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    asterix
+      1.0.0
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

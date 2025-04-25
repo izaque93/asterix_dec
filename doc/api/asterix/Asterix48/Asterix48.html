@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the Asterix48.new constructor from Class Asterix48 from the asterix library, for the Dart programming language.">
+  <title>Asterix48.new constructor - Asterix48 - asterix library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">asterix</a></li>
+    <li><a href="../../asterix/">asterix.dart</a></li>
+    <li><a href="../../asterix/Asterix48-class.html">Asterix48</a></li>
+    <li class="self-crumb">Asterix48.new constructor</li>
+  </ol>
+  <div class="self-name">Asterix48.new</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="asterix&#47;Asterix48-class-sidebar.html"
+      data-below-sidebar="">
+      <div>
+<h1><span class="kind-constructor">Asterix48</span> constructor 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+      <span class="name ">Asterix48</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="-param-data"><span class="type-annotation"><a href="https://api.dart.dev/dev/3.8.0-171.0.dev/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/dev/3.8.0-171.0.dev/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">data</span></span></li>
+</ol>)
+    </section>
+    
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Asterix48(List&lt;int&gt; data) : super(data) {
+  &#47;&#47; first extended variables
+  bool isAircraftAddressPresent = false;
+  bool isAircraftIdentificationPresent = false;
+  bool isModeSMBDataPresent = false;
+  bool isTrackNumberPresent = false;
+  bool isCalculatedPositionInCartesianCoordinatesPresent = false;
+  bool isCalculatedTrackVelocityInPolarRepresentationPresent = false;
+  bool isTrackStatusPresent = false;
+
+  &#47;&#47; second extended variables
+  bool isTrackQualityPresent = false;
+  bool isWarningErrorConditionsTargetClassificationPresent = false;
+  bool isMode3ACodeConfidenceIndicatorPresent = false;
+  bool isModeCCodeandConfidenceIndicatorPresent = false;
+  bool isHeightMeasuredBy3dRadarPresent = false;
+  bool isRadialDopplerSpeedPresent = false;
+  bool isCommunicationsACASCapabilityAndFlightStatusPresent = false;
+
+  &#47;&#47; third extended variables
+  bool isACASResolutionAdvisoryReportPresent = false;
+  bool isMode1InOctalRepresentationPresent = false;
+  bool isMode2InOctalRepresentationPresent = false;
+  bool isMode1InConfidenceIndicatorPresent = false;
+  bool isMode2InConfidenceIndicatorPresent = false;
+  bool isSpecialPurposeFieldPresent = false;
+  bool isReservedExpansionFieldPresent = false;
+
+  category = 48;
+  int i = 1;
+  &#47;&#47;length = data[0] * 256 + data[1];
+  &#47;&#47; FSPEC field
+  int fspec = data[++i];
+
+  final isDataSourcePresent = super.bitfield(fspec, 8);
+  final isTimeOfDayPresent = super.bitfield(fspec, 7);
+  final istargetReportDescriptorPresent = super.bitfield(fspec, 6);
+  final isMeasuredPositioninSlantPolarCoordinatesPresent = super.bitfield(
+    fspec,
+    5,
+  );
+  final isMode3ACodeinOctalRepresentationPresent = super.bitfield(fspec, 4);
+  final isFlightLevelinBinaryRepresentationPresent = super.bitfield(fspec, 3);
+  final isRadarPlotCharacteristicsPresent = super.bitfield(fspec, 2);
+
+  &#47;&#47; Read next FSPEC field (1)
+  if (fspec &amp; 0x01 == 0x01) {
+    fspec = data[++i];
+    isAircraftAddressPresent = super.bitfield(fspec, 8);
+    isAircraftIdentificationPresent = super.bitfield(fspec, 7);
+    isModeSMBDataPresent = super.bitfield(fspec, 6);
+    isTrackNumberPresent = super.bitfield(fspec, 5);
+    isCalculatedPositionInCartesianCoordinatesPresent = super.bitfield(
+      fspec,
+      4,
+    );
+    isCalculatedTrackVelocityInPolarRepresentationPresent = super.bitfield(
+      fspec,
+      3,
+    );
+    isTrackStatusPresent = super.bitfield(fspec, 2);
+  }
+
+  &#47;&#47; Read next FSPEC field (2)
+  if (fspec &amp; 0x01 == 0x01) {
+    fspec = data[++i];
+    isTrackQualityPresent = super.bitfield(fspec, 8);
+    ;
+    isWarningErrorConditionsTargetClassificationPresent = super.bitfield(
+      fspec,
+      7,
+    );
+    isMode3ACodeConfidenceIndicatorPresent = super.bitfield(fspec, 6);
+    isModeCCodeandConfidenceIndicatorPresent = super.bitfield(fspec, 5);
+    ;
+    isHeightMeasuredBy3dRadarPresent = super.bitfield(fspec, 4);
+    isRadialDopplerSpeedPresent = super.bitfield(fspec, 3);
+    isCommunicationsACASCapabilityAndFlightStatusPresent = super.bitfield(
+      fspec,
+      2,
+    );
+  }
+
+  &#47;&#47; Read next FSPEC field (3)
+  if (fspec &amp; 0x01 == 0x01) {
+    fspec = data[++i];
+    isACASResolutionAdvisoryReportPresent = super.bitfield(fspec, 8);
+
+    isMode1InOctalRepresentationPresent = super.bitfield(fspec, 7);
+    isMode2InOctalRepresentationPresent = super.bitfield(fspec, 6);
+    isMode1InConfidenceIndicatorPresent = super.bitfield(fspec, 5);
+
+    isMode2InConfidenceIndicatorPresent = super.bitfield(fspec, 4);
+    isSpecialPurposeFieldPresent = super.bitfield(fspec, 3);
+    isReservedExpansionFieldPresent = super.bitfield(fspec, 2);
+  }
+
+  while (0x01 &amp; fspec == 0x01) {
+    fspec = data[++i];
+  }
+  if (isDataSourcePresent) {
+    super.decodeDataSourceIdentifier([data[++i], data[++i]]);
+  }
+
+  if (isTimeOfDayPresent) {
+    super.decodeTimeOfDay([data[++i], data[++i], data[++i]]);
+  }
+  &#47;&#47; I048&#47;020 Target Report Descriptor
+  if (istargetReportDescriptorPresent) {
+    &#47;&#47;Read next field
+    int targetReportDescriptor = data[++i];
+
+    &#47;&#47; MSB 3 bits TYP
+    int typ = targetReportDescriptor &amp; 0xE0;
+    typ = typ &gt;&gt; 5;
+    detectionType = DetectionType.values[typ];
+
+    &#47;&#47; bit 5 SIM
+    int sim = targetReportDescriptor &amp; 0x10 == 0x10 ? 1 : 0;
+    simulatedOrActual = SimulatedOrActual.values[sim];
+
+    &#47;&#47; bit 4 RDP Chain
+    rdpChain = targetReportDescriptor &amp; 0x08 == 0x08 ? 2 : 1;
+
+    &#47;&#47; bit 3 SPI
+    spi = targetReportDescriptor &amp; 0x04 == 0x04;
+
+    &#47;&#47; bit 2 RAB
+    replyOrigin = ReplyOrigin.values[(targetReportDescriptor &amp; 0x02) &gt;&gt; 1];
+
+    &#47;&#47; bit 1 First Extend &#47;&#47;TODO: test
+    if (targetReportDescriptor &amp; 0x01 == 0x01) {
+      targetReportDescriptor = data[++i];
+
+      &#47;&#47; bit 8 TST
+      realOrTest = RealOrTest.values[targetReportDescriptor &amp; 0x80 &gt;&gt; 7];
+
+      &#47;&#47; bit 7 ERR Extended Range present or not
+      extendedRange = targetReportDescriptor &amp; 0x40 == 0x40;
+
+      &#47;&#47; bit 6 XPP X-Pulse present or not
+      xPulsePresent = targetReportDescriptor &amp; 0x20 == 0x20;
+
+      &#47;&#47; bit 5 ME Military Emergency
+      militaryEmergency = targetReportDescriptor &amp; 0x10 == 0x10;
+
+      &#47;&#47; bit 4 MI Military identification
+      militaryIdentification = targetReportDescriptor &amp; 0x08 == 0x08;
+
+      &#47;&#47; bit 3&#47;2 FOE&#47;FRI
+      foefri = FOEFRI.values[targetReportDescriptor &amp; 0x06 &gt;&gt; 1];
+
+      &#47;&#47; bit 1 Second Extend
+      &#47;&#47;TODO: test
+      if (targetReportDescriptor &amp; 0x01 == 0x01) {
+        targetReportDescriptor = data[++i];
+
+        &#47;&#47; bit 8 ADSB#EP ADSB Element Populated Bit
+        adsbElementPopulated = targetReportDescriptor &amp; 0x80 == 0x80;
+
+        &#47;&#47; bit 7 On-Site ADS-B Information Avaliable
+        onSiteADSBInformationAvaliable =
+            targetReportDescriptor &amp; 0x40 == 0x40;
+
+        &#47;&#47;bits-6&#47;5 (SCN) Surveillance Cluster Network Information
+        scnElementPopulated = targetReportDescriptor &amp; 0x20 == 0x20;
+        surveillanceClusterNetworkInformationAvailable =
+            targetReportDescriptor &amp; 0x10 == 0x10;
+
+        &#47;&#47;bits-4&#47;3 (PAI) Passive Acquisition Interface Informatio
+        paiElementPopulated = targetReportDescriptor &amp; 0x08 == 0x08;
+        passiveAcquisitionInterfaceInformationAvailable =
+            targetReportDescriptor &amp; 0x04 == 0x04;
+
+        &#47;&#47; load nexts extended fields not suported yet
+        while (targetReportDescriptor &amp; 0x01 == 0x01) {
+          targetReportDescriptor = data[++i];
+        }
+      }
+    }
+  }
+
+  &#47;&#47; I048&#47;040 Measured Position in Slant Polar Coordinates
+  if (isMeasuredPositioninSlantPolarCoordinatesPresent) {
+    rho = ((data[++i] &lt;&lt; 8) + data[++i]) &#47; 256; &#47;&#47;[NM]
+    theta = ((data[++i] &lt;&lt; 8) + data[++i]) * 0.0055; &#47;&#47;[deg]
+  }
+
+  &#47;&#47; I048&#47;070 Mode-3&#47;A Code in Octal Representation
+  if (isMode3ACodeinOctalRepresentationPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    mode3ACodeValidated = !(firstByte &amp; 0x80 == 0x80);
+    mode3ACodeGarbled = firstByte &amp; 0x40 == 0x40;
+    mode3ACodeOrigin = Mode3ACodeOrigin.values[(firstByte &amp; 0x20) &gt;&gt; 5];
+
+    mode3ACode = &quot;${(firstByte &amp; 0x0E) &gt;&gt; 1}&quot;;
+    mode3ACode =
+        &quot;${mode3ACode!}${((firstByte &amp; 0x01) &lt;&lt; 2) + ((secondByte &amp; 0xC0) &gt;&gt; 6)}&quot;;
+    mode3ACode =
+        &quot;${mode3ACode!}${(secondByte &amp; 0x38) &gt;&gt; 3}${secondByte &amp; 0x07}&quot;;
+  }
+  &#47;&#47; I048&#47;090 Flight Level in Binary Representation
+  if (isFlightLevelinBinaryRepresentationPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    flightLevelValidated = !(firstByte &amp; 0x80 == 0x80);
+    flightLevelGarbled = firstByte &amp; 0x40 == 0x40;
+    flightLevel = (((firstByte &amp; 0x3F) &lt;&lt; 8) + secondByte) * 0.25;
+  }
+
+  &#47;&#47;I048&#47;130 Radar Plot Characteristics
+  if (isRadarPlotCharacteristicsPresent) {
+    final firstByte = data[++i];
+    if (firstByte &amp; 0x80 == 0x80) {
+      ssrPlotRunlength = data[++i] * 0.044;
+    }
+    if (firstByte &amp; 0x40 == 0x40) {
+      numberOfReceivedMssrReplies = data[++i];
+    }
+    if (firstByte &amp; 0x20 == 0x20) {
+      amplitudeOfMssrReply = data[++i].toSigned(8);
+    } &#47;&#47;TODO: test
+    if (firstByte &amp; 0x10 == 0x10) {
+      primaryPlotRunlength = data[++i] * 0.044;
+    } &#47;&#47;TODO: test
+    if (firstByte &amp; 0x08 == 0x08) {
+      amplitudeOfprimaryPlot = data[++i].toSigned(8);
+    }
+    &#47;&#47;TODO: test
+    if (firstByte &amp; 0x04 == 0x04) {
+      differenceInRangeBetweenPsrAndSsrplot = data[++i].toSigned(8) &#47; 256;
+    }
+    &#47;&#47;TODO: test
+    if (firstByte &amp; 0x02 == 0x02) {
+      differenceInAzimuthBetweenPsrAndSsrplot =
+          data[++i].toSigned(8) * 0.02197265625;
+    }
+  }
+
+  &#47;&#47; I048&#47;220 Aircraft Address
+  &#47;&#47; TODO: test
+  if (isAircraftAddressPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    final thirdByte = data[++i];
+    aircraftMSAddress = (firstByte &lt;&lt; 16) + (secondByte &lt;&lt; 8) + thirdByte;
+  }
+
+  &#47;&#47; I048&#47;240 Aircraft Identification (MS)
+  if (isAircraftIdentificationPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    final thirdByte = data[++i];
+    aircraftIdentification = String.fromCharCode(firstByte &gt;&gt; 2);
+    aircraftIdentification =
+        aircraftIdentification! +
+        String.fromCharCode(((firstByte &amp; 0x03) &lt;&lt; 4) + (secondByte &gt;&gt; 4));
+    aircraftIdentification =
+        aircraftIdentification! +
+        String.fromCharCode(((secondByte &amp; 0x0F) &lt;&lt; 2) + (thirdByte &gt;&gt; 6));
+    aircraftIdentification =
+        aircraftIdentification! + String.fromCharCode(thirdByte &amp; 0x3F);
+  }
+
+  &#47;&#47; I048&#47;250 Mode-S MB Data
+  &#47;&#47; TODO: test
+  if (isModeSMBDataPresent) {
+    final firstByte = data[++i];
+    for (int j = 8; j &gt; 0; j++) {
+      if (super.bitfield(firstByte, j)) {
+        if (j &gt; 1) {
+          if (bds == null) {
+            bds = data[++i];
+          } else {
+            bds = (bds! &lt;&lt; 8) + data[++i];
+          }
+        } else {
+          final finalByte = data[++i];
+          bds1 = (finalByte &amp; 0xF0) &gt;&gt; 4;
+          bds2 = finalByte &amp; 0x0F;
+        }
+      }
+    }
+  }
+  &#47;&#47; I048&#47;161 Track Number
+  if (isTrackNumberPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    trackNumber = (firstByte &lt;&lt; 8) + secondByte;
+  }
+
+  &#47;&#47; I048&#47;042 Calculated Position in Cartesian Coordinates
+  if (isCalculatedPositionInCartesianCoordinatesPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    final thirdByte = data[++i];
+    final fourthByte = data[++i];
+    xCoordinate = ((firstByte &lt;&lt; 8) + secondByte).toSigned(16) &#47; 128;
+    yCoordinate = ((thirdByte &lt;&lt; 8) + fourthByte).toSigned(16) &#47; 128;
+  }
+
+  &#47;&#47; I048&#47;200 Calculated Track Velocity in Polar Representation
+  if (isCalculatedTrackVelocityInPolarRepresentationPresent) {
+    final firstByte = data[++i];
+    final secondByte = data[++i];
+    final thirdByte = data[++i];
+    final fourthByte = data[++i];
+    trackGroundSpeed = ((firstByte &lt;&lt; 8) + secondByte) &#47; 16384; &#47;&#47;[NM&#47;s]
+    trackHeading =
+        ((thirdByte &lt;&lt; 8) + fourthByte) * 0.0055; &#47;&#47;[deg] geographic ref
+  }
+
+  &#47;&#47; I048&#47;170 Track Status
+  if (isTrackStatusPresent) {
+    final info = data[++i];
+    confirmedOrTentativeTrack =
+        bitfield(info, 8)
+            ? ConfirmedOrTentativeTrack.tentative
+            : ConfirmedOrTentativeTrack.confirmed;
+    trackMaintainingSensors =
+        TrackMaintainingSensors.values[(info &amp; 0x60) &gt;&gt; 5];
+    confideceInAssociationProcess =
+        ConfideceInAssociationProcess.values[bitfield(info, 5) ? 1 : 0];
+    manoeuvreDetectionInHorizontalSense = bitfield(info, 4);
+    climbingDescendingMode = ClimbingDescendingMode.values[(info &amp; 0x6) &gt;&gt; 1];
+    &#47;&#47; extension field
+    if (bitfield(info, 1)) {
+      final info = data[++i];
+      endOfTrack = bitfield(info, 8);
+      ghostTarget = bitfield(info, 7);
+      trackMaintainingWithExternalSources = bitfield(info, 6);
+      typeOfPlotCoordTransformationMechanism =
+          TypeOfPlotCoordTransformationMechanism.values[(info &amp; 0x10) &gt;&gt; 4];
+      while (bitfield(info, 1)) {
+        final _ = data[++i];
+      }
+    }
+  }
+  &#47;&#47;Data Item I048&#47;210, Track Quality
+  &#47;&#47;TODO: test
+  if (isTrackQualityPresent) {
+    horizontalStandardDeviation = data[++i] &#47; 128; &#47;&#47; [NM]
+    verticalStandardDeviation = data[++i] &#47; 128; &#47;&#47; [NM]
+    groundspeedStandardDeviation = data[++i] &#47; 16384; &#47;&#47; [NM&#47;s]
+    headingStandardDeviation = data[++i] * 0.08789; &#47;&#47; [°]
+  }
+
+  &#47;&#47;Data Item I048&#47;030, Warning&#47;Error Conditions, and Special Purpose Field
+  if (isWarningErrorConditionsTargetClassificationPresent) {
+    &#47;&#47;TODO: test
+    int info = data[++i];
+
+    warningErrorConditions = WarningErrorConditions.values[info &gt;&gt; 1];
+
+    while (bitfield(info, 1)) {
+      info = data[++i];
+    }
+  }
+  &#47;&#47;Data Item I048&#47;080, Mode-3&#47;A Code Confidence Indicator
+  if (isMode3ACodeConfidenceIndicatorPresent) {
+    int info = data[++i];
+    mode3Aqa4 = bitfield(info, 4);
+    mode3Aqa2 = bitfield(info, 3);
+    mode3Aqa1 = bitfield(info, 2);
+    mode3Aqb4 = bitfield(info, 1);
+    info = data[++i];
+    mode3Aqb2 = bitfield(info, 8);
+    mode3Aqb1 = bitfield(info, 7);
+    mode3Aqc4 = bitfield(info, 6);
+    mode3Aqc2 = bitfield(info, 5);
+    mode3Aqc1 = bitfield(info, 4);
+    mode3Aqd4 = bitfield(info, 3);
+    mode3Aqd2 = bitfield(info, 2);
+    mode3Aqd1 = bitfield(info, 1);
+  }
+  &#47;&#47; I048&#47;100 Mode-C Code and Confidence Indicator
+  &#47;&#47;TODO: test
+  if (isModeCCodeandConfidenceIndicatorPresent) {
+    int info = data[++i];
+    modeCCodeValidated = !bitfield(info, 8);
+    modeCCodeGarbled = bitfield(info, 7);
+    modeCReplyInGrayNotation = ((info &amp; 0x0F) &lt;&lt; 8) + data[++i];
+    info = data[++i];
+    modoCLowQualityIndicators =
+        (info &lt;&lt; 8) + data[++i]; &#47;&#47; high bits has low quality
+  }
+  &#47;&#47; Data Item I048&#47;110, Height Measured by a 3D Radar
+  if (isHeightMeasuredBy3dRadarPresent) {
+    int info = data[++i];
+    heightMeasuredBy3dRadar =
+        ((info &lt;&lt; 8) + data[++i]).toSigned(16) * 25; &#47;&#47;[ft]
+  }
+  &#47;&#47;Data Item I048&#47;120, Radial Doppler Speed
+  &#47;&#47;TODO: test
+  if (isRadialDopplerSpeedPresent) {
+    int info = data[++i];
+    bool cal = bitfield(info, 8);
+    bool rds = bitfield(info, 7);
+    if (cal) {
+      info = data[++i];
+      dopplerSpeedValid = bitfield(info, 8);
+      dopplerSpeed = (((info &amp; 0x03) &lt;&lt; 8) + data[++i].toSigned(10)); &#47;&#47;[m&#47;s]
+    }
+    if (rds) {
+      final rep = data[++i];
+      dopplerSpeed = (data[++i] &lt;&lt; 8) + data[++i];
+      ambiguityRange = (data[++i] &lt;&lt; 8) + data[++i];
+      transmitterFrequency = (data[++i] &lt;&lt; 8) + data[++i];
+    }
+  }
+  &#47;&#47; Data Item I048&#47;230, Communications&#47;ACAS Capability and Flight Status
+  &#47;&#47; TODO: Implement
+  if (isCommunicationsACASCapabilityAndFlightStatusPresent) {
+    int info = data[++i];
+    int COM = info &amp; 0xE0 &gt;&gt; 5;
+    int STAT = info &amp; 0x1C &gt;&gt; 2;
+    bool SI = bitfield(info, 2);
+    info = data[++i];
+    bool MSCC = bitfield(info, 8);
+    bool ARC = bitfield(info, 7);
+    bool AIC = bitfield(info, 6);
+    bool B1A = bitfield(info, 5);
+    int B1B = info &amp; 0x0F;
+  }
+  &#47;&#47; Data Item I048&#47;260, ACAS Resolution Advisory Report
+  &#47;&#47; TODO: test
+  if (isACASResolutionAdvisoryReportPresent) {
+    acasResolutionAdvisoryReport = 0;
+    for (int j = 0; j &lt; 7; j++) {
+      acasResolutionAdvisoryReport = acasResolutionAdvisoryReport! &lt;&lt; 8;
+      acasResolutionAdvisoryReport =
+          acasResolutionAdvisoryReport! + data[++i];
+    }
+  }
+  &#47;&#47; I048&#47;055, Mode-1 Code in Octal Representation
+  if (isMode1InOctalRepresentationPresent) {
+    int info = data[++i];
+    mode1Validated = !bitfield(info, 8);
+    mode1Garbled = bitfield(info, 7);
+    mode1ReplyOrigin = Mode1Or2CodeOrigin.values[(info &amp; 0x20) &gt;&gt; 5];
+    mode1Code = &quot;${(info &amp; 0x1C) &gt;&gt; 2}${info &amp; 0x03}&quot;;
+  }
+  &#47;&#47; I048&#47;050, Mode-2 Code in Octal Representation
+  &#47;&#47; TODO: test
+  if (isMode2InOctalRepresentationPresent) {
+    int info = data[++i];
+    int secondByte = data[++i];
+    mode2Validated = !bitfield(info, 8);
+    mode2Garbled = bitfield(info, 7);
+    mode2ReplyOrigin = Mode1Or2CodeOrigin.values[(info &amp; 0x20) &gt;&gt; 5];
+
+    mode2Code = &quot;${(info &amp; 0x0E) &gt;&gt; 1}&quot;;
+    mode2Code =
+        &quot;${mode2Code!}${((info &amp; 0x01) &lt;&lt; 2) + ((secondByte &amp; 0xC0) &gt;&gt; 6)}&quot;;
+    mode2Code = &quot;${mode2Code!}${(info &amp; 0x38) &gt;&gt; 3}${secondByte &amp; 0x07}&quot;;
+  }
+  &#47;&#47; Data Item I048&#47;065, Mode-1 Code Confidence Indicator
+  &#47;&#47;TODO: Test
+  if (isMode1InConfidenceIndicatorPresent) {
+    int info = data[++i];
+    mode1Qa4 = bitfield(info, 5);
+    mode1Qa2 = bitfield(info, 4);
+    mode1Qa1 = bitfield(info, 3);
+    mode1Qb2 = bitfield(info, 2);
+    mode1Qb1 = bitfield(info, 1);
+  }
+
+  &#47;&#47;Data Item I048&#47;060, Mode-2 Code Confidence Indicator
+  &#47;&#47;TODO: Test
+  if (isMode2InConfidenceIndicatorPresent) {
+    int info = data[++i];
+    mode2qa4 = bitfield(info, 4);
+    mode2qa2 = bitfield(info, 3);
+    mode2qa1 = bitfield(info, 2);
+    mode2qb4 = bitfield(info, 1);
+    info = data[++i];
+    mode2qb2 = bitfield(info, 8);
+    mode2qb1 = bitfield(info, 7);
+    mode2qc4 = bitfield(info, 6);
+    mode2qc2 = bitfield(info, 5);
+    mode2qc1 = bitfield(info, 4);
+    mode2qd4 = bitfield(info, 3);
+    mode2qd2 = bitfield(info, 2);
+    mode2qd1 = bitfield(info, 1);
+  }
+
+  &#47;&#47;decode next packet if its present
+  if (i &lt; data.length - 1) {
+    next = Asterix48(data.sublist(i - 1));
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">asterix</a></li>
+    <li><a href="../../asterix/">asterix</a></li>
+    <li><a href="../../asterix/Asterix48-class.html">Asterix48</a></li>
+    <li class="self-crumb">Asterix48.new constructor</li>
+</ol>
+
+    <h5>Asterix48 class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    asterix
+      1.0.0
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

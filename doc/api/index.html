@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="asterix API docs, for the Dart programming language.">
+  <title>asterix - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">asterix package</li>
+  </ol>
+  <div class="self-name">asterix</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <!--
+This README describes the package. If you publish this package to pub.dev,
+this README's contents appear on the landing page for your package.
+
+For information about how to write a good package README, see the guide for
+[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+
+For general information about developing packages, see the Dart guide for
+[creating packages](https://dart.dev/guides/libraries/create-packages)
+and the Flutter guide for
+[developing packages and plugins](https://flutter.dev/to/develop-packages).
+-->
+<p>This packet decodes Asterix messages</p>
+<h2 id="features">Features</h2>
+<p>Can decode Asterix messages in categories 34 and 48.
+We're working in support for cat 8, 1 and 2.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>Download the package and import as follow:</p>
+<pre class="language-dart"><code class="language-dart">import 'package:asterix/asterix.dart';
+import 'package:asterix/src/asterix34.dart';
+import 'package:asterix/src/asterix48.dart';
+</code></pre>
+<pre class="language-dart"><code class="language-dart">void main() {
+  final asterixDecoder = AsterixDecoder();
+  // Read asterix file
+  final file = File('rec_bin_001.bin',); // only asterix payload, don't suport .pcap
+  final stream = await file.readAsBytes();
+  // Read lenght fields of the first asterix packet
+  final length = stream[1] * 256 + stream[2];
+  asterixPacket = stream.sublist(0, length);
+  Asterix asterixInfo = asterixDecoder.fromBinary(asterixPacket);
+
+
+}
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>this example demonstrates the usage for decode asterix 34 service messages</p>
+<pre class="language-dart"><code class="language-dart">if (asterixInfo.category == 34) {
+    final packet = asterixInfo as Asterix34;
+    if (packet.antennaRotationPeriod != null) {
+        print(packet.antennaRotationPeriod);
+    }
+    if (packet.sectorNumber != null) {
+        final deltaTheta =
+            (packet.sectorNumber! != 0.0
+                ? packet.sectorNumber!
+                : 360.0) -
+            lastSector;
+        final deltaTime = packet.timeOfDay! - lastTimeSector;
+        print("${packet.sectorNumber} -&gt;  ${deltaTheta / deltaTime}");
+        lastSector = packet.sectorNumber!;
+        lastTimeSector = packet.timeOfDay!;
+    }
+}
+</code></pre>
+<p>The fields on class Asterix subclasses can be null or a value depending the info.
+Null values meaning no information.</p>
+<h2 id="additional-information">Additional information</h2>
+<p>For more information about this package, visit the <a href="https://github.com/your-repo/asterix-decoder">official repository</a>. Here, you can find detailed documentation, examples, and updates.</p>
+<h3 id="contributing">Contributing</h3>
+<p>We welcome contributions! If you'd like to contribute, please check out our <a href="https://github.com/your-repo/asterix-decoder/blob/main/CONTRIBUTING.md">contribution guidelines</a>. Whether it's reporting bugs, suggesting features, or submitting pull requests, your input is valuable.</p>
+<h3 id="filing-issues">Filing Issues</h3>
+<p>If you encounter any issues or have questions, please file an issue on our <a href="https://github.com/your-repo/asterix-decoder/issues">GitHub Issues page</a>. We aim to respond within 48 hours.</p>
+<h3 id="support">Support</h3>
+<p>For additional support, feel free to reach out via the <a href="https://github.com/your-repo/asterix-decoder/discussions">discussions page</a>. Our team and community are here to help.</p>
+<p>Thank you for using the Asterix Decoder package!</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="asterix">
+  <span class="name"><a href="asterix/">asterix</a></span> 
+
+</dt>
+<dd>Support for doing something awesome.
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">asterix package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">asterix</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="asterix/">asterix</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    asterix
+      1.0.0
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
